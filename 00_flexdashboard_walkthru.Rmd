@@ -1,0 +1,252 @@
+---
+title: "00 Flexdashboard Walkthrough"
+subtitle: "MKTG 411 Marketing Analytics"
+output: 
+  ioslides_presentation:
+    widescreen: true
+---
+
+## Interactive Dashboards (image of dashboard)
+
+<center>
+![](~/Work/Dotson RA/RA_work/images/flexdashboard_hex.png){width=650px, hieght=500px}
+</center>
+
+## Why Dashboards?
+
+- Dashboards create an easy way to interpret and report data to others.
+  + Key performance indicators
+  + Data visualizations
+  + Exploring Data
+- Interactive Dashboards allow users to manipulate the data that is used in the visualizations
+
+
+## Flexdashboard
+
+- __flexdashboard__ is an R package that allows you to easily build dashboards using _Rmarkdown_.
+
+- Utilizing _shiny_ functions in a dashboard will help create interactive dashboards.
+
+## Example Dasbhoards
+
+(Maybe some images of dashboards so they know what they look like. Or we can use some that I have built before and play around with them just so they get the gist of it)
+
+## Set up
+
+- Open a new document in R
+- Choose drop down and select Rmarkdown
+- Choose from Template
+- Select flexdashboard
+
+## Elements of flexdashboard
+
+- yaml header
+- Layout (columns or rows)
+- Code chunks
+- Charts
+- Sidebar
+
+## YAML Header
+
+- As an Rmarkdown document, there are addition parameters in the yaml output that make it a flexdashboard:
+
+`flexdashboard::flex_dashboard:`  
+` orientation: rows`  
+` vertical_layout: scroll`  
+    
+- Additionally, to use shiny functions you include:
+
+`runtime: shiny`
+
+## Layout
+
+The yaml header influences the layout of the dashboard
+
+- orientation is the layout of the charts which can be _columns_ or _rows_
+
+- vertical_layout changes how it fits the web page with _fill_ or _scroll_ as options
+
+- Another element of the yaml is _theme_. Changes font, color, etc. 
+
+## Making a Column or Row
+
+Columns and Rows are defined by the level 2 markdown header annotation (`-------------`)
+- Code chunks following the header will show up in that column/row
+- Data width or height can be modified above header annotation between {} (`{data-width=650px}`)
+
+## Code Chunks
+
+Any code that has an output will be shown in the dashboard.
+
+Data cleaning, manipulation, etc can be performed in the background just showing the data insights on the dashboard by assigning it to an object without printing.
+
+Data Visuals (i.e. graphs and tables) and Rendered elements (i.e. `renderText()` and `renderValue()`) will show on the dashboard.
+
+---
+
+Chunks will be given titles by using markdown header (`###`)
+
+Additional code chunks under the column/row header will be included in that column/row
+
+---
+
+Example Images of the different layouts
+
+---
+
+<center>
+![](~/Work/Dotson RA/RA_work/images/column_orientation.png){width=650px, hieght=500px}
+</center>
+
+---
+
+<center>
+![](~/Work/Dotson RA/RA_work/images/row_orientation.png){width=650px, hieght=500px}
+</center>
+
+---
+
+<center>
+![](~/Work/Dotson RA/RA_work/images/stack_scrolling.png){width=650px, hieght=500px}
+</center>
+
+## Packages
+
+We use the _flexdashboard_ and _shiny_ packages to access the functions that allow you to build interactive plots in a dashboard.
+```{r message=FALSE}
+library(tidyverse)
+library(flexdashboard)
+library(shiny)
+
+mpg
+```
+
+---
+
+## Adding Charts
+
+Let's add a filter to a simple graph that we made before.
+
+```{r}
+mpg %>% 
+  filter(manufacturer == "audi") %>% 
+  ggplot(aes(x = hwy, y = cty)) +
+  geom_jitter(size = 3, alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+## Adding Value Box
+
+Now let's make a value box to call out a particular value that would be interesting
+
+```{r}
+
+summary <- mpg %>%
+  filter(manufacturer == "audi") %>% 
+  summarize(avg_hwy = mean(hwy))
+
+```
+
+---
+Now we need the shiny function `valueBox()` which will put our value in a nice call out box.
+
+Use the _icon_ argument to add a favicon.
+
+Also we are rounding the number so there aren't a lot of decimal places
+
+---
+
+```{r}
+# valueBox(round(summary,2), icon = "fa-car")
+```
+
+---
+
+## Note on Shiny functions
+
+They will not show up in your plots tab or in the console. You must knit your document and run the dashboard before being able to see these special functions.
+
+---
+
+## Adding a table
+
+```{r}
+mpg_summary <- mpg %>%
+  group_by(manufacturer) %>%
+  summarize(
+    n = n(),
+    avg_hwy = mean(hwy),
+    avg_cty = mean(cty)
+  ) %>% 
+  arrange(desc(n))
+```
+
+---
+
+## Making Things Interactive!
+
+Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side bar
+
+---
+
+## Input Sidebar
+
+Sidebars are useful for placing input fields that allow you to interact with your data visualization.
+
+You create an input sidebar similar to making a column but add the parameter of `{.sidebar}`.   followed by the same markdown header as a column (`----------------`)
+
+## Input Functions
+
+Input functions allow you to make various kinds of inputs that will let you interact with your data.
+
+Components:
+
+- Input id
+
+- Input label
+
+- Choices list
+
+Examples:
+
+- `selectInput()`
+
+```{r}
+# selectInput(
+#   "manu_id",
+#   "Manufacturer",
+#   choices = c(unique(mpg[,1]))
+# )
+```
+
+---
+
+
+## Wrapping Up
+
+*Summary*
+
+- How to open a flexdashboard template through Rmarkdown.
+- How to modify the layout of the dashboard.
+- Create an interactive plot using a sidebar and `selectInput()`. 
+
+*Next Time*
+
+- 
+
+*Supplementary Material*
+
+- Flexdashboard for R webpage: 
+  + link : _https://rmarkdown.rstudio.com/flexdashboard/index.html_
+- RStudio’s Rmarkdown and Flexdashboard Cheatsheets
+
+## Exercise 0
+
+Open the exercise via the RStudio Cloud workspace and do the following.
+
+1. Load the tidyverse.
+2. Explore `mpg` using the functions we've covered.
+3. Provide a few interesting descriptions (numeric summaries) and visualizations (graphical summaries).
+4. Practice good coding conventions: Comment often, write in consecutive lines of code using the `%>%`, and use the demonstrated style (e.g., variable names, spacing within functions).
+5. Export the R script and upload to Learning Suite.

@@ -1,0 +1,625 @@
+---
+title: "Book of Mormon Sentiment Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: flatly
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(tidytext)
+library(textdata)
+library(rvest)
+library(wordcloud)
+library(ggthemes)
+
+```
+
+```{r}
+# list of books 
+books <- c("1 Nephi", "2 Nephi", "Jacob", "Enos", "Jarom", "Omni", "Words of Mormon", "Mosiah", "Alma", "Helaman", "3 Nephi", "4 Nephi", "Mormon", "Ether", "Moroni")
+
+book_labels <- c("1 Nephi", "2 Nephi", "Jacob", "", " ", "  ", "    ", "Mosiah", "Alma", "Helaman", "3 Nephi", "      ", "Mormon", "Ether", "Moroni", "       ")
+
+booklist <- tibble(books) %>% 
+  mutate(
+    num_chapters = as.vector(c(22, 33, 7, 1, 1, 1, 1, 29, 63, 16, 30, 1, 9, 15, 10)),
+    book_code = as.character(c("1-ne", "2-ne", "jacob", "enos", "jarom", "omni", "w-of-m", "mosiah", "alma", "hel", "3-ne", "4-ne", "morm", "ether", "moro"))
+  )
+
+custom_stop_words <- tribble(
+  ~word, ~lexicon,
+  "ye", "CUSTOM",
+  "pass", "CUSTOM",
+  "yea", "CUSTOM",
+  "thy", "CUSTOM",
+  "behold", "CUSTOM",
+  "wherefore", "CUSTOM",
+  "thou", "CUSTOM",
+  "hath", "CUSTOM",
+  "beheld", "CUSTOM",
+  "people", "CUSTOM"
+)
+
+```
+
+```{r preprocessing}
+
+## This code is commented out so that it doesn't reprocess it every time the dashboard loads
+
+# # Loop thru book_codes and chapters to scrape data
+# 
+# for (i in seq(booklist$book_code)) {
+#   # get book code
+#   code <- booklist$book_code[i]
+#   # filter by book code
+#   x <- booklist %>% filter(book_code == code)
+# 
+#   for (j in seq(x$num_chapters)) {
+#     # get chapters
+#     chapters <- x$num_chapters[j]
+#     # Web scrap
+#     text <- read_html(paste0("https://www.churchofjesuschrist.org/study/scriptures/bofm/", code, "/", j, "?lang=eng")) %>%
+#       html_nodes("#content") %>% # the part of the website you want, Selector Gadget to find out the node
+#       html_text() %>%
+#       str_split("(\\.|\\:)(\\d|\\d\\d)\\s") %>%
+#       unlist()
+#     # Tidy Text
+#     y <- tibble(text) %>%
+#       mutate(
+#         book_code = code,
+#         chapter = j,
+#         verse = row_number()
+#       ) %>%
+#       unnest_tokens(word, text) %>%
+#       anti_join(stop_words) %>%
+#       anti_join(custom_stop_words)
+#     # if first iteration
+#     if(j == 1 & code == "1-ne") {
+#       tidy_text <- y
+#     }
+#     # Combine the tibbles
+#     tidy_text <- rbind(tidy_text, y)
+#   }
+# 
+# }
+# 
+# # Write tidy_text to csv so that it doens't redo the webscrapping
+# write_csv(tidy_text, "data/bom_tidy.csv")
+
+# read in data
+tidy_text <- read_csv(here::here("data", "bom_tidy.csv")) %>% 
+  inner_join(booklist, by = "book_code") %>% 
+  select(books, book_code, num_chapters, chapter, verse, word)
+
+```
+
+Sidebar {.sidebar}
+=======================================================================
+
+### Welcome
+
+__Explore your favorite chapters of the Book of Mormon and see what words get used the most and the overall sentiment of books and chapters using the inputs below.__
+
+******
+
+### User Inputs
+
+```{r}
+
+selectInput(
+  "bk",
+  label = "Select Book",
+  choices = unique(tidy_text$books),
+  selected = "1 Nephi"
+)
+
+renderUI({
+  selectInput(
+    "chp",
+    label = "Select Chapter",
+    choices = c(
+      1:max(tidy_text$num_chapters[tidy_text$books == input$bk])
+    ),
+    selected = 1
+  )
+})
+
+sliderInput(
+  "bktop",
+  label = "Number of Top Words (book)",
+  min = 5,
+  max = 15,
+  value = 10,
+  step = 1,
+  round = TRUE,
+  ticks = FALSE
+)
+
+sliderInput(
+  "chptop",
+  label = "Number of Top Words (chapter)",
+  min = 5,
+  max = 15,
+  value = 10,
+  step = 1,
+  round = TRUE,
+  ticks = FALSE
+)
+
+```
+
+_For visualization purposes only a range of 5-15 is used for selecting the top number of words._
+
+******
+
+All text data is scrapped from [The Church of Jesus Chirst of Latter-day Saints](https://www.churchofjesuschrist.org/study/scriptures/bofm?lang=eng)
+
+Text Analysis
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Book Word Cloud
+
+```{r book wordcloud}
+
+# Make a word cloud as well for another visualization practice
+set.seed(42)
+
+# # the colors help show the more important words over the not as important ones
+# tidy_text %>%
+#   filter(book_code == "1-ne") %>%
+#   filter(chapter == 1) %>%
+#   count(word) %>%
+#   with(
+#     wordcloud(
+#       word,
+#       n,
+#       min.freq = 2,
+#       max.words = 400,
+#       random.order=FALSE,
+#       rot.per=0.35,
+#       scale=c(4,0.1),
+#       colors = brewer.pal(8, "Dark2")
+#     )
+#   )
+
+renderPlot({
+  tidy_text %>% 
+    filter(books == input$bk) %>%
+    count(word) %>% 
+    with(
+      wordcloud(
+        word,
+        n, 
+        min.freq = 2,
+        max.words = 400,
+        random.order=FALSE, 
+        rot.per=0.35, 
+        scale=c(3.5,0.25),
+        colors = brewer.pal(8, "Dark2")
+      )
+    )
+})
+
+
+```
+
+### Book Top Words
+
+```{r book top words}
+# tidy_text %>%
+#   filter(book_code == "1-ne") %>%
+#   filter(chapter == 1) %>%
+#   count(word) %>%
+#   mutate(word = fct_reorder(word, n)) %>%
+#   arrange(desc(n)) %>% 
+#   head(10) %>% 
+#   ggplot(aes(x = word, y = n)) +
+#   geom_col() +
+#   coord_flip()
+
+renderPlot({
+  tidy_text %>%
+    filter(books == input$bk) %>%  
+    count(word) %>%
+    mutate(word = fct_reorder(word, n)) %>%
+    arrange(desc(n)) %>% 
+    head(input$bktop) %>% 
+    ggplot(aes(x = word, y = n)) +
+    geom_col(fill = "#1B9E77") + 
+    coord_flip() +
+    labs(
+      title = paste("Top", input$bktop, "Words in", input$bk),
+      y = "Occurances"
+    ) +
+    theme_tufte() +
+    theme(
+      axis.title.y = element_blank(),
+      axis.ticks = element_blank()
+    )
+})
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Chapter Word Cloud
+
+```{r chapter wordcloud}
+
+# Make a word cloud as well for another visualization practice
+set.seed(42)
+
+# # the colors help show the more important words over the not as important ones
+# tidy_text %>%
+#   filter(book_code == "1-ne") %>%
+#   filter(chapter == 1) %>%
+#   count(word) %>%
+#   with(
+#     wordcloud(
+#       word,
+#       n,
+#       min.freq = 2,
+#       max.words = 200,
+#       random.order=FALSE,
+#       rot.per=0.35,
+#       scale=c(3.5,0.25),
+#       colors = brewer.pal(11, "RdYlBu")
+#     )
+#   )
+
+renderPlot({
+  tidy_text %>% 
+    filter(books == input$bk) %>% 
+    filter(chapter == input$chp) %>% 
+    count(word) %>% 
+    with(
+      wordcloud(
+        word,
+        n, 
+        min.freq = 2,
+        max.words = 200,
+        random.order=FALSE, 
+        rot.per=0.35, 
+        scale=c(4,0.1),
+        colors = brewer.pal(8, "Dark2")
+      )
+    )
+})
+
+
+```
+
+### Chapter Top Words
+
+```{r chapter top words}
+# tidy_text %>%
+#   filter(book_code == "1-ne") %>%
+#   filter(chapter == 1) %>%
+#   count(word) %>%
+#   mutate(word = fct_reorder(word, n)) %>%
+#   arrange(desc(n)) %>%
+#   head(10) %>% 
+#   ggplot(aes(x = word, y = n)) + 
+#   geom_col(fill = "#1B9E77") +
+#   coord_flip() +
+#   labs(
+#     title = paste("Top", "10", "Words in", "1 Nephi", "1"),
+#     y = "Occurances"
+#   ) +
+#   theme_tufte() +
+#   theme(
+#     axis.title.y = element_blank(),
+#     axis.ticks = element_blank()
+#   )
+    
+
+renderPlot({
+  tidy_text %>%
+    filter(books == input$bk) %>% 
+    filter(chapter == input$chp) %>% 
+    count(word) %>%
+    mutate(word = fct_reorder(word, n)) %>%
+    arrange(desc(n)) %>% 
+    head(input$chptop) %>% 
+    ggplot(aes(x = word, y = n)) +
+    geom_col(fill = "#1B9E77") + 
+    coord_flip() +
+    labs(
+      title = paste("Top", input$chptop, "Words in", input$bk, input$chp),
+      y = "Occurances"
+    ) +
+    theme_tufte() +
+    theme(
+      axis.title.y = element_blank(),
+      axis.ticks = element_blank()
+    )
+})
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Book of Mormon Word Cloud
+
+```{r bom wordcloud}
+
+# Make a word cloud as well for another visualization practice
+set.seed(42)
+
+# # the colors help show the more important words over the not as important ones
+# tidy_text %>%
+#   count(word) %>%
+#   with(
+#     wordcloud(
+#       word,
+#       n,
+#       min.freq = 2,
+#       max.words = 400,
+#       random.order=FALSE,
+#       rot.per=0.35,
+#       scale=c(4,0.1),
+#       colors = brewer.pal(8, "Dark2")
+#     )
+#   )
+
+renderPlot({
+  tidy_text %>% 
+    count(word) %>% 
+    with(
+      wordcloud(
+        word,
+        n, 
+        min.freq = 2,
+        max.words = 400,
+        random.order=FALSE, 
+        rot.per=0.35, 
+        scale=c(4,0.1),
+        colors = brewer.pal(8, "Dark2")
+      )
+    )
+})
+
+
+```
+
+### Total Book of Mormon
+
+```{r bom top words}
+# tidy_text %>%
+#   filter(book_code == "1-ne") %>%
+#   filter(chapter == 1) %>%
+#   count(word) %>%
+#   mutate(word = fct_reorder(word, n)) %>%
+#   arrange(desc(n)) %>% 
+#   head(10) %>% 
+#   ggplot(aes(x = word, y = n)) +
+#   geom_col() +
+#   coord_flip()
+
+renderPlot({
+  tidy_text %>%
+    count(word) %>%
+    mutate(word = fct_reorder(word, n)) %>%
+    arrange(desc(n)) %>% 
+    head(input$bktop) %>% 
+    ggplot(aes(x = word, y = n)) +
+    geom_col(fill = "#1B9E77") + 
+    coord_flip() +
+    labs(
+      title = paste("Top", input$bktop, "Words in the Book of Mormon"),
+      y = "Occurances"
+    ) +
+    theme_tufte() +
+    theme(
+      axis.title.y = element_blank(),
+      axis.ticks = element_blank()
+    )
+})
+```
+
+Sentiment Analysis
+=======================================================================
+
+Row
+----------------------------------------------------------------------
+
+### Book Sentiment
+
+```{r book sentiment}
+# tidy_text %>% 
+#   filter(book_code == "1-ne") %>% 
+#   inner_join(get_sentiments("bing")) %>% 
+#   count(chapter, sentiment) %>% 
+#   pivot_wider(
+#     names_from = sentiment,
+#     values_from = n,
+#     values_fill = list(n = 0)
+#   ) %>% 
+#   mutate(
+#     sentiment = positive - negative,
+#     sign = ifelse(sentiment >= 0, "positive", "negative")
+#   ) %>% 
+#   ggplot(aes(chapter, sentiment, fill = sign)) +
+#   geom_col(position = "dodge") + 
+#   scale_fill_manual(values=c("#A5771D","#1B9E77")) +
+#   theme(
+#     legend.position = "none"
+#   )
+
+renderPlot({
+  tidy_text %>% 
+    filter(books == input$bk) %>% 
+    inner_join(get_sentiments("bing")) %>% 
+    count(chapter, sentiment) %>% 
+    pivot_wider(
+      names_from = sentiment,
+      values_from = n,
+      values_fill = list(n = 0)
+    ) %>% 
+    mutate(
+      sentiment = positive - negative,
+      sign = ifelse(sentiment >= 0, "positive", "negative")
+    ) %>% 
+    ggplot(aes(chapter, sentiment, fill = sign)) +
+    geom_col(position = "dodge") + 
+    scale_fill_manual(values=c("#A5771D","#1B9E77"), name = "Sentiment") +
+    labs(
+      title = paste("Sentiment Score Through", input$bk, "Chapters"),
+      y = "Sentiment Score",
+      x = "Chapter"
+    ) +
+    theme_tufte() +
+    theme(
+      axis.ticks.y = element_blank(),
+      text = element_text(family = "Helvetica Neue")
+    )
+})
+
+
+```
+
+Row
+----------------------------------------------------------------------
+
+### Chapter Sentiment
+
+```{r chapter sentiment}
+# tidy_text %>%
+#   filter(book_code == "1-ne") %>%
+#   filter(chapter == 1) %>%
+#   inner_join(get_sentiments("bing")) %>%
+#   count(verse, sentiment) %>%
+#   pivot_wider(
+#     names_from = sentiment,
+#     values_from = n,
+#     values_fill = list(n = 0)
+#   ) %>%
+#   mutate(
+#     sentiment = positive - negative,
+#     sign = ifelse(sentiment >= 0, "positive", "negative")
+#   ) %>%
+#   ggplot(aes(verse, sentiment, fill = sign)) +
+#   geom_col(position = "dodge") +
+#   scale_fill_manual(values=c("#A5771D","#1B9E77"), name = "Sentiment") +
+#   labs(
+#     title = "Title",
+#     y = "Sentiment Score",
+#     x = "Verse"
+#   ) +
+#   theme_tufte() +
+#   theme(
+#     axis.ticks.y = element_blank()
+#   )
+
+renderPlot({
+  tidy_text %>% 
+    filter(books == input$bk) %>% 
+    filter(chapter == input$chp) %>% 
+    inner_join(get_sentiments("bing")) %>% 
+    count(verse, sentiment) %>% 
+    pivot_wider(
+      names_from = sentiment,
+      values_from = n,
+      values_fill = list(n = 0)
+    ) %>% 
+    mutate(
+      sentiment = positive - negative,
+      sign = ifelse(sentiment >= 0, "positive", "negative")
+    ) %>% 
+    ggplot(aes(verse, sentiment, fill = sign)) +
+    geom_col(position = "dodge") + 
+    scale_fill_manual(values=c("#A5771D","#1B9E77"), name = "Sentiment") +
+    labs(
+      title = paste("Sentiment Score Through", input$bk, input$chp, "Verses"),
+      y = "Sentiment Score",
+      x = "Verse"
+    ) +
+    theme_tufte() +
+    theme(
+      axis.ticks.y = element_blank(),
+      text = element_text(family = "Helvetica Neue")
+    )
+})
+
+```
+
+Row
+----------------------------------------------------------------------
+
+### Book of Mormon Sentiment
+
+```{r bom sentiment}
+# tidy_text %>%
+#   filter(book_code == "1-ne") %>%
+#   filter(chapter == 1) %>%
+#   inner_join(get_sentiments("bing")) %>%
+#   count(verse, sentiment) %>%
+#   pivot_wider(
+#     names_from = sentiment,
+#     values_from = n,
+#     values_fill = list(n = 0)
+#   ) %>%
+#   mutate(
+#     sentiment = positive - negative,
+#     sign = ifelse(sentiment >= 0, "positive", "negative")
+#   ) %>%
+#   ggplot(aes(verse, sentiment, fill = sign)) +
+#   geom_col(position = "dodge") +
+#   scale_fill_manual(values=c("#A5771D","#1B9E77"), name = "Sentiment") +
+#   labs(
+#     title = "Title",
+#     y = "Sentiment Score",
+#     x = "Verse"
+#   ) +
+#   theme_tufte() +
+#   theme(
+#     axis.ticks.y = element_blank()
+#   )
+
+renderPlot({
+  tidy_text %>% 
+    inner_join(get_sentiments("bing")) %>% 
+    count(books, chapter, sentiment) %>% 
+    pivot_wider(
+      names_from = sentiment,
+      values_from = n,
+      values_fill = list(n = 0)
+    ) %>% 
+    mutate(
+      sentiment = positive - negative,
+      sign = ifelse(sentiment >= 0, "positive", "negative")
+    ) %>%
+    ggplot(aes(chapter, sentiment, fill = sign)) +
+    geom_col(position = "dodge") + 
+    scale_fill_manual(values=c("#A5771D","#1B9E77"), name = "Sentiment") +
+    labs(
+      title = paste("Sentiment Score Throughout the Book of Mormon Chapters"),
+      y = "Sentiment Score",
+      x = "Book"
+    ) +
+    theme_tufte() +
+    theme(
+      axis.ticks.y = element_blank(),
+      text = element_text(family = "Helvetica Neue"),
+      axis.ticks.x = element_blank(),
+      axis.text.x =element_blank(), 
+      axis.title.x = element_blank(),
+      strip.text.x = element_text(angle = 90),
+      legend.position = "none"
+    ) +
+  facet_grid(~factor(books, levels = book_labels, ordered = TRUE), scales = "free_x", space = "free_x", switch = "x", labeller=label_wrap_gen(width = 1000, multi_line = TRUE))
+})
+
+```
+

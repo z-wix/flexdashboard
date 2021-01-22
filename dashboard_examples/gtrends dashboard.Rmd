@@ -1,0 +1,857 @@
+---
+title: "BYU Marketing Lab"
+runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: cosmo
+---
+
+```{r packages, include=FALSE}
+
+# Install gtrendsR
+# install.packages("plotly")
+
+# Packages
+library(flexdashboard)
+library(shiny)
+library(gtrendsR)
+library(tidyverse)
+library(plotly)
+library(ggplot2)
+library(DT)
+library(rsconnect)
+
+# Package Required For Streamgraph installed from github repo
+# devtools::install_github("hrbrmstr/streamgraph")
+library(streamgraph)
+
+# Packages Required For Topic Mapping
+library(tidytext)
+library(igraph)
+library(ggraph)
+
+# Import State Dataset We can use for long lists of states for choices in inputs
+states <- read_csv(here::here("data","states_list.csv")) %>% 
+  mutate(
+    country = "US",
+    state_code = str_c(country, Abbreviation, sep = "-")
+  )
+
+# US Population data from census bureau
+uspop <- read.csv(here::here("data", "2019PopByRegionAndState.csv")) %>% 
+  rename(location = "Region")
+
+```
+
+```{r reactive}
+# By Region Reactive Element
+by_region <- reactive({
+  output_results_us <- gtrends(keyword = input$keyword1_id,
+      geo = "US",  #default always US 
+      time = input$time_id)
+  
+  # output_results %>% summary()
+  
+  by_region <- output_results_us %>%
+    .$interest_by_region %>% group_by(location, keyword) %>% summarize(hits) %>% drop_na()
+  
+  by_region <- by_region %>% arrange(desc(hits)) %>% mutate( ToHighlight = ifelse( location == input$highlight_id, "yes", "no" ) )
+})
+
+# By region per Capita
+by_region_pop <- reactive({
+  by_region = by_region()
+
+  by_region_pop <- inner_join(by_region, uspop, by = "location")
+  by_region_pop$hitspercapita <- by_region_pop$hits/by_region_pop$Pop
+  
+  
+  # Interest by region per capita
+  by_region_pop <- by_region_pop %>%
+    group_by(location, keyword) %>% summarize(hitspercapita) %>% drop_na()
+  
+  by_region_pop <- by_region_pop %>% arrange(desc(hitspercapita)) %>% mutate( ToHighlight = ifelse( location == input$highlight_id, "yes", "no" ) )
+})
+
+# Interest Over Time Reactive Element
+int_over_time <- reactive({
+  
+   STATE <- gtrends(keyword = input$keyword1_id,
+        geo = input$geo_id,  # other option include today 12-m, 
+        time = input$time_id) %>% 
+    .$interest_over_time
+
+  # MO <- output_results_1 %>%
+  #   .$interest_over_time 
+
+  US <- gtrends(keyword = input$keyword1_id,
+        geo = "US",  #default always US 
+        time = input$time_id) %>% 
+    .$interest_over_time
+
+  # US <- output_results_2 %>%
+  #   .$interest_over_time 
+  
+  int_over_time <- rbind(STATE,US)
+  int_over_time %>% arrange(desc(date))
+  int_over_time <- rename(int_over_time, Region ="geo")
+  
+})
+
+# Top Queries Reactive Element
+topqueries <- reactive({
+  US <- gtrends(keyword = input$keyword1_id,
+        geo = "US",  #default always US 
+        time = input$time_id)
+
+  US_related <- as_tibble(US$related_queries)
+
+# output_results_2_related <- as_tibble(output_results_2$related_queries)
+
+
+  # Get top queries
+  topqueries <- US_related %>% 
+    filter(related_queries == 'top') %>% 
+    unnest_tokens(bigram, value, token = 'ngrams', n = 3) %>% 
+    separate(bigram, c("word1", "word2", "word3"), sep = " ") %>% 
+    filter(!word1 %in% stop_words$word, !word2 %in% stop_words$word, !word3 %in% stop_words$word) 
+})
+
+# Rising Queries Reactive Element
+risingqueries <- reactive({
+  US <- gtrends(keyword = input$keyword1_id,
+        geo = "US",  #default always US 
+        time = input$time_id)
+
+  US_related <- as_tibble(US$related_queries)
+  
+
+  risingqueries <- US_related %>% 
+    filter(related_queries == 'rising') %>% 
+    unnest_tokens(bigram, value, token = 'ngrams', n = 3) %>% 
+    separate(bigram, c("word1", "word2", "word3"), sep = " ") %>% 
+    filter(!word1 %in% stop_words$word, !word2 %in% stop_words$word, !word3 %in% stop_words$word)
+})
+
+```
+
+```{r practice}
+
+# US <- gtrends(keyword = c("Sustainable", "Eco-friendly"),
+#         geo = "US",  #default always US 
+#         time = "all")
+# 
+#   US_related <- as_tibble(US$related_queries)
+#   
+#   
+#   word_counts <- US_related %>% 
+#     select(value) %>% 
+#     unnest_tokens(word, value) %>% 
+#     count(word, sort = TRUE) %>% 
+#     filter(!word %in% stop_words$word)
+# 
+#   risingqueries_bigram <- US_related %>% 
+#     filter(related_queries == 'rising') %>% 
+#     unnest_tokens(bigram, value, token = 'ngrams', n = 3) %>% 
+#     separate(bigram, c("word1", "word2", "word3"), sep = " ") %>% 
+#     filter(!word1 %in% stop_words$word, !word2 %in% stop_words$word, !word3 %in% stop_words$word) %>%
+#     count(word1, word2, sort = TRUE) %>% 
+#     filter(!is.na(word1), !is.na(word2)) %>% 
+#     graph_from_data_frame(vertices = word_counts) 
+```
+
+Inputs {.sidebar}
+=====================================================================
+
+Adjust the inputs below then press __Go__ to run analysis
+
+```{r}
+actionButton("goButton", "Go")
+```
+
+******
+
+```{r inputs}
+
+# Select Keyword
+textInput(
+  inputId = "keyword1_id",
+  label = "Select Keyword",
+  value = "Sustainable"
+)
+
+# add apply button so the graph doesn't refresh automatically
+# applyButton()
+
+# highlighted state input
+selectInput(
+  inputId = "highlight_id",
+  label = "Select State to Highlight",
+  choices = unique(states[,1]),
+  selected = "Missouri"
+)
+
+# Select Time
+selectInput(
+  inputId = "time_id",
+  label = "Select Time",
+  choices = c("now 1-H", "now 4-H", "now 1-H", "now 1-d", "now 7-d", "today 1-m", "today 12-m", "today+5-y", "all"),
+  selected = "all"
+)
+
+# Select Geo Region
+selectInput(
+  inputId = "geo_id",
+  label = "Select Geographical Region",
+  # choices = c("US-MO","US"),
+  choices = c(unique(states[,5]), "US"),
+  selected = "US-MO"
+)
+
+```
+
+_Geographical Region is for the interest over time and query related charts_
+
+******
+
+__NOTE__: The Go button is still being worked on for all the charts
+
+Google Trends
+=====================================================================
+
+Hits By Region
+-----------------------------------------------------------------------
+
+### Hits By Region
+
+```{r}
+
+by_regionplot <- eventReactive(input$goButton, {
+  
+  # by_regionplot <- reactiveValues()
+
+   by_region = by_region()
+
+  # filter data for top 25 locations
+  top_25 <- by_region %>%
+    filter(hits >= 3) %>%
+    head(25)
+
+  # select the highlighted location
+  highlight <- by_region %>%
+    # filter(hits >= 3) %>%
+    filter(ToHighlight == "yes")
+
+  # For loop to
+  if(any(top_25$ToHighlight == "yes") == TRUE) {
+    region <- top_25
+  } else{
+    region <- rbind(top_25, highlight)
+  }
+
+  by_regionplot <- region %>%
+    ggplot(aes(x = reorder(location, hits), y = hits, fill = ToHighlight )) +
+    geom_col() +
+    coord_flip() +
+    labs(title = paste("Hits by Region for Search Term:", input$keyword1_id),
+         x = "Location",
+         y = "Number of Hits") +
+    scale_fill_manual( values = c( "yes"="#007dc2", "no"="gray" ), guide = FALSE ) +
+    theme_minimal() +
+    theme(
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      plot.background = element_blank(),
+      axis.title.y = element_blank(),
+      legend.position = "none",
+      text = element_text(family = "Avenir")
+    ) +
+    annotate("text", y = highlight$hits + 5, x = highlight$location, label = highlight$hits, color = "#007dc2", size = 5) +
+    scale_y_continuous(expand = c(0,0))
+
+  by_regionplot
+})
+
+
+
+renderPlotly({
+  by_regionplot()
+})
+  
+```
+
+```{r}
+
+# renderPlotly({
+#    by_region= by_region()
+# 
+#   # filter data for top 25 locations
+#   top_25 <- by_region %>%
+#     filter(hits >= 3) %>%
+#     head(25)
+# 
+#   # select the highlighted location
+#   highlight <- by_region %>%
+#     # filter(hits >= 3) %>%
+#     filter(ToHighlight == "yes")
+# 
+#   # For loop to
+#   if(any(top_25$ToHighlight == "yes") == TRUE) {
+#     region <- top_25
+#   } else{
+#     region <- rbind(top_25, highlight)
+#   }
+# 
+#   region %>%
+#     ggplot(aes(x = reorder(location, hits), y = hits, fill = ToHighlight )) +
+#     geom_col() +
+#     coord_flip() +
+#     labs(title = paste("Hits by Region for Search Term:", input$keyword1_id),
+#          x = "Location",
+#          y = "Number of Hits") +
+#     scale_fill_manual( values = c( "yes"="#007dc2", "no"="gray" ), guide = FALSE ) +
+#     theme_minimal() +
+#     theme(
+#       panel.background = element_blank(),
+#       panel.grid = element_blank(),
+#       plot.background = element_blank(),
+#       axis.title.y = element_blank(),
+#       legend.position = "none",
+#       text = element_text(family = "Avenir")
+#     ) +
+#     annotate("text", y = highlight$hits + 5, x = highlight$location, label = highlight$hits, color = "#007dc2", size = 5) +
+#     scale_y_continuous(expand = c(0,0))
+# })
+
+  
+```
+
+Hits Per Capita Per Region
+-----------------------------------------------------------------------
+
+### Hits Per Capita By Region
+
+```{r}
+by_region_popplot <- eventReactive(input$goButton, {
+  
+  by_region_pop = by_region_pop()
+  
+  # filter data for top 25 locations
+  top_25 <- by_region_pop %>% 
+    head(25)
+  
+  # select the highlighted location
+  highlight <- by_region_pop %>% 
+    filter(ToHighlight == "yes")
+  
+  # For loop to 
+  if(any(top_25$ToHighlight == "yes") == TRUE) {
+    region_pop <- top_25
+  } else{
+    region_pop <- rbind(top_25, highlight)
+  }
+  
+  by_region_popplot <- region_pop %>% 
+    filter(hitspercapita >= 0) %>% 
+    ggplot(aes(x = reorder(location, hitspercapita), y = hitspercapita, fill = ToHighlight )) +
+    geom_col() + 
+    coord_flip() + 
+    labs(title = paste("Hits Per Capita by Region for Search Term:", input$keyword1_id),
+                                     x = "Location",
+                                     y = "Number of Hits Per Capita") +
+    scale_fill_manual( values = c( "yes"="#007dc2", "no"="gray" ), guide = FALSE ) +
+    theme_minimal() +
+    theme(
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      plot.background = element_blank(),
+      axis.title.y = element_blank(),
+      text = element_text(family = "Avenir"),
+      legend.position = "none",
+    ) +
+    annotate("text", y = highlight$hitspercapita, x = highlight$location, label = round(highlight$hitspercapita, 6), color = "#007dc2", size = 4, family = "Avenir", vjust = -.05) +
+    scale_y_continuous(expand = c(0,0))
+  
+  by_region_popplot
+  
+})
+
+renderPlotly({
+  by_region_popplot()
+})
+  
+```
+
+```{r}
+# renderPlotly({
+#   by_region_pop = by_region_pop()
+#   
+#   # filter data for top 25 locations
+#   top_25 <- by_region_pop %>% 
+#     head(25)
+#   
+#   # select the highlighted location
+#   highlight <- by_region_pop %>% 
+#     filter(ToHighlight == "yes")
+#   
+#   # For loop to 
+#   if(any(top_25$ToHighlight == "yes") == TRUE) {
+#     region_pop <- top_25
+#   } else{
+#     region_pop <- rbind(top_25, highlight)
+#   }
+#   
+#   region_pop %>% 
+#     filter(hitspercapita >= 0) %>% 
+#     ggplot(aes(x = reorder(location, hitspercapita), y = hitspercapita, fill = ToHighlight )) +
+#     geom_col() + 
+#     coord_flip() + 
+#     labs(title = paste("Hits Per Capita by Region for Search Term:", input$keyword1_id),
+#                                      x = "Location",
+#                                      y = "Number of Hits Per Capita") +
+#     scale_fill_manual( values = c( "yes"="#007dc2", "no"="gray" ), guide = FALSE ) +
+#     theme_minimal() +
+#     theme(
+#       panel.background = element_blank(),
+#       panel.grid = element_blank(),
+#       plot.background = element_blank(),
+#       axis.title.y = element_blank(),
+#       text = element_text(family = "Avenir"),
+#       legend.position = "none",
+#     ) +
+#     annotate("text", y = highlight$hitspercapita, x = highlight$location, label = round(highlight$hitspercapita, 6), color = "#007dc2", size = 4, family = "Avenir", vjust = -.05) +
+#     scale_y_continuous(expand = c(0,0))
+# })
+  
+```
+
+Interest Over Time Comparison
+-----------------------------------------------------------------------
+
+### Interest Over Time
+
+```{r}
+int_timeplot <- eventReactive(input$goButton, {
+  int_over_time = int_over_time()
+  
+  int_timeplot <- int_over_time %>% 
+    ggplot(aes(x = date, y = hits)) +
+    geom_line(aes(color = Region), size = 0.5) +
+    labs(title = paste("US Search Volume Over Time for Search Term:", input$keyword1_id),
+                                     x = "Date",
+                                     y = "Hits") + 
+    scale_color_manual(values = c("#e08f5b", "#007dc2")) +
+    theme_minimal() +
+    theme(
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      plot.background = element_blank(),
+      axis.title.x = element_blank(),
+      text = element_text(family = "Avenir")
+    )
+  
+  int_timeplot
+})
+
+renderPlotly({
+  int_timeplot()
+  
+})
+
+```
+
+```{r}
+
+# renderPlotly({
+#   int_over_time = int_over_time()
+#   
+#   int_over_time %>% 
+#     ggplot(aes(x = date, y = hits)) +
+#     geom_line(aes(color = Region), size = 0.5) +
+#     labs(title = paste("US Search Volume Over Time for Search Term:", input$keyword1_id),
+#                                      x = "Date",
+#                                      y = "Hits") + 
+#     scale_color_manual(values = c("#e08f5b", "#007dc2")) +
+#     theme_minimal() +
+#     theme(
+#       panel.background = element_blank(),
+#       panel.grid = element_blank(),
+#       plot.background = element_blank(),
+#       axis.title.x = element_blank(),
+#       text = element_text(family = "Avenir")
+#     )
+#   
+# })
+
+```
+
+Streamgraph example
+-----------------------------------------------------------------------
+
+### Streamgraph
+
+```{r}
+
+int_stream <- eventReactive(input$goButton,{
+  int_over_time = int_over_time()
+    
+  # Different Version
+  int_stream <- int_over_time %>%
+    streamgraph(key="Region", value="hits", date="date") %>%
+    sg_axis_x(5, "year", "%Y") %>%
+    sg_axis_y(0) %>%
+    sg_fill_manual(values = c("#e08f5b", "#007dc2"))
+  
+  int_stream
+})
+
+renderStreamgraph({
+  int_stream()
+})
+
+```
+
+```{r}
+# renderStreamgraph({
+#   int_over_time = int_over_time()
+# 
+#   # int_over_time %>% 
+#   #   ggplot(aes(x = date, y = hits)) +
+#   #   geom_line(aes(color = Region), size = 0.5) +
+#   #   labs(title = paste("US Search Volume Over Time for Search Term:", input$keyword1_id),
+#   #                                    x = "Date",
+#   #                                    y = "Hits") + 
+#   #   scale_color_manual(values = c("#e08f5b", "#007dc2")) +
+#   #   theme_minimal() +
+#   #   theme(
+#   #     panel.background = element_blank(),
+#   #     panel.grid = element_blank(),
+#   #     plot.background = element_blank(),
+#   #     axis.title.x = element_blank(),
+#   #     text = element_text(family = "Avenir")
+#   #   )
+#   
+#   # int_over_time %>%
+#   #   streamgraph(key="Region", value="hits", date="date", offset = "silhouette", interpolate = "step") %>% 
+#   #   sg_axis_x(5, "year", "%Y") %>% 
+#   #   sg_axis_y(0) %>%
+#   #   sg_fill_manual(values = c("#e08f5b", "#007dc2"))
+#     
+#   # Different Version
+#   int_over_time %>%
+#     streamgraph(key="Region", value="hits", date="date") %>%
+#     sg_axis_x(5, "year", "%Y") %>%
+#     sg_axis_y(0) %>%
+#     sg_fill_manual(values = c("#e08f5b", "#007dc2"))
+# 
+# })
+
+```
+
+Topic Graph
+--------------------------------------------------------------------
+
+### Topic Graph
+
+```{r}
+
+renderPlot({
+  topqueries = topqueries()
+  
+  topqueries_bigram <- topqueries %>% 
+    count(word1, word2, word3, sort = TRUE) %>% 
+    filter(!is.na(word1), !is.na(word2), !is.na(word3)) %>% 
+    graph_from_data_frame() 
+  
+  # arrow for graph
+  a <- grid::arrow(type = "closed", length = unit(.15, "inches"))
+
+  # Set Seed
+  set.seed(42)
+
+  # Graph related top queries
+  ggraph(topqueries_bigram, layout = "fr") +
+    geom_edge_link(aes(edge_alpha = n), show.legend = FALSE,
+                   arrow = a, end_cap = circle(.07, 'inches'), edge_colour = "#007dc2") +
+    geom_node_point(color = "#003769", size = 3) +
+    geom_node_text(aes(label = name), 
+                   vjust = 1, hjust = 1,
+                   repel = TRUE, 
+                   point.padding = unit(0.2, "lines")) +
+    theme_void() +
+    labs(title = "Google Trends: top queries (US)",
+         caption = "source: @eeysirhc") +
+    theme(
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      plot.background = element_blank(),
+      text = element_text(family = "Avenir")
+    )
+})
+
+```
+
+Rising Queries
+--------------------------------------------------------------------
+
+### Rising Queries
+
+```{r}
+
+renderPlot({
+  risingqueries = risingqueries()
+  
+  US <- gtrends(keyword = input$keyword1_id,
+        geo = "US",  #default always US 
+        time = input$time_id)
+  
+  US_related <- as_tibble(US$related_queries)
+  
+  
+  word_counts <- US_related %>% 
+    select(value) %>% 
+    unnest_tokens(word, value) %>% 
+    count(word, sort = TRUE) %>% 
+    filter(!word %in% stop_words$word)
+  
+  risingqueries_bigram <- risingqueries %>% 
+    count(word1, word2, word3, sort = TRUE) %>% 
+    filter(!is.na(word1), !is.na(word2), !is.na(word3)) %>% 
+    graph_from_data_frame(vertices = word_counts)
+  
+  a <- grid::arrow(type = "closed", length = unit(.15, "inches"))
+
+  set.seed(42)
+
+  ggraph(risingqueries_bigram, layout = "fr") +
+    geom_edge_link(aes(edge_alpha = n), 
+                   show.legend = FALSE,
+                   arrow = a, 
+                   end_cap = circle(.07, 'inches'), 
+                   edge_colour = "#007dc2") +
+    geom_node_point(aes(size = n, color = n)) +
+    geom_node_text(aes(label = name), 
+                   vjust = 1, hjust = 1,
+                   repel = TRUE, 
+                   point.padding = unit(0.2, "lines")) +
+    scale_color_gradient2(low = '#e08f5b', high = '#8cc5be', midpoint = 25) +
+    theme_void() +
+    theme(
+      legend.position = 'none',
+      text = element_text(family = "Avenir")
+    ) +
+    labs(title = 'Google Trends: rising queries (US)',
+         caption = "source: @eeysirhc") 
+
+})
+```
+
+
+Data Output
+=====================================================================
+
+Row
+--------------------------------------------------------------------
+
+### Hits by Region Data
+
+```{r}
+DT::renderDataTable({
+  by_region = by_region()
+  
+  DT::datatable(
+    by_region, 
+    options = list(bPaginate = TRUE)
+  )
+})
+
+
+# Download Button
+downloadButton("table1", label = "Download Hits By Region")
+
+downloadHandler(
+  filename = function() {
+    "output/hits_region.csv"
+  },
+  content = function(file) {
+    write.csv(by_region(), file)
+  }
+)
+  
+```
+
+
+Row
+--------------------------------------------------------------------
+
+### Hits by Region per Capita Data
+
+```{r}
+DT::renderDataTable({
+  by_region_pop = by_region_pop()
+  
+  by_region_pop$hitspercapita <- round(by_region_pop$hitspercapita, 7)
+    
+  
+  DT::datatable(
+    by_region_pop, 
+    options = list(bPaginate = TRUE)
+  )
+})
+
+
+# Download Button
+downloadButton("table2", label = "Download Hits per Capita")
+
+downloadHandler(
+  filename = function() {
+    "output/hits_capita.csv"
+  },
+  content = function(file) {
+    write.csv(by_region_pop(), file)
+  }
+)
+
+```
+
+Row
+--------------------------------------------------------------------
+
+### Interest Over Time Data
+
+```{r}
+DT::renderDataTable({
+  int_over_time = int_over_time()
+  
+  DT::datatable(
+    int_over_time, 
+    options = list(bPaginate = TRUE)
+  )
+})
+
+
+# Download Button
+downloadButton("table2", label = "Download Interest Over Time")
+
+downloadHandler(
+  filename = function() {
+    "output/int_over_time.csv"
+  },
+  content = function(file) {
+    write.csv(int_over_time(), file)
+  }
+)
+
+```
+
+Row
+--------------------------------------------------------------------
+
+### Top Queries Data
+
+```{r}
+DT::renderDataTable({
+  topqueries = topqueries()
+  
+  DT::datatable(
+    topqueries, 
+    options = list(bPaginate = TRUE)
+  )
+})
+
+
+# Download Button
+downloadButton("table3", label = "Download Top Queries")
+
+downloadHandler(
+  filename = function() {
+    "output/top_queries.csv"
+  },
+  content = function(file) {
+    write.csv(topqueries(), file)
+  }
+)
+```
+
+Row
+--------------------------------------------------------------------
+
+### Rising Queries Data
+
+```{r}
+DT::renderDataTable({
+  risingqueries = risingqueries()
+  
+  DT::datatable(
+    risingqueries, 
+    options = list(bPaginate = TRUE)
+  )
+})
+
+
+# Download Button
+downloadButton("table4", label = "Download Rising Queires")
+
+downloadHandler(
+  filename = function() {
+    "output/rising_queries.csv"
+  },
+  content = function(file) {
+    write.csv(risingqueries(), file)
+  }
+)
+```
+
+Batch Processing
+=====================================================================
+
+Inputs {data-height=100}
+---------------------------------------------------------------------
+
+```{r inputs_new}
+
+# Select Keyword
+textInput(
+  inputId = "keyword1_id",
+  label = "Select Keyword",
+  value = "Sustainable"
+)
+
+textInput(
+  inputId = "keyword2_id",
+  label = "Select Keyword",
+  value = "Sustainable"
+)
+
+textInput(
+  inputId = "keyword3_id",
+  label = "Select Keyword",
+  value = "Sustainable"
+)
+
+# add apply button so the graph doesn't refresh automatically
+# applyButton()
+
+```
+
+Row {data-height=50}
+--------------------------------------------------------------------
+
+__Coming Soon__: This will eventually batch process different keywords and save them into individual files in an output folder. 
+
+Row
+--------------------------------------------------------------------
+
+### Output
+
+```{r}
+
+search_terms <- reactive({
+  search_terms <- as.vector(c(input$keyword1_id, input$keyword2_id, input$keyword3_id))
+  search_terms
+})
+
+```
+

@@ -1,0 +1,119 @@
+---
+title: "Customer Credit Dashbaord"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: yeti
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+# Packages
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(ggthemes)
+library(DT)
+
+# Data Import
+customer_data <- read_csv(here::here("data", "customer_data.csv"))
+```
+
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+
+This is the side bar where you can put inputs that will influence your charts
+
+******
+
+```{r}
+
+# Region Selection
+selectInput(
+  "region",
+  "Region",
+  choices = unique(customer_data[,8])
+)
+
+# State Selection
+selectInput(
+  "state",
+  "State",
+  choices = unique(customer_data[,9]),
+  selected = "UT"
+)
+
+# Marital Status Selection
+selectInput(
+  "marital",
+  "Marital Status",
+  choices = c("Yes", "No"),
+  selected = "Yes"
+)
+
+# College Degree Selection
+selectInput(
+  "college",
+  "College Degree",
+  choices = c("Yes", "No"),
+  selected = "Yes"
+)
+```
+
+
+Row
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+renderPlot({
+  customer_data %>% 
+    filter(state == input$state) %>% 
+    filter(married == input$marital) %>% 
+    filter(college_degree == input$college) %>% 
+    ggplot(aes(x = birth_year, y = credit, size = income, color = gender, alpha = 0.2)) +
+    geom_point() +
+    # geom_smooth(method = "lm", se = FALSE) +
+    theme_minimal()
+})
+
+
+```
+
+Row 
+-----------------------------------------------------------------------
+
+### Summary Table
+
+```{r}
+DT::renderDataTable({
+  customer_data %>% 
+    group_by(region) %>% 
+    summarize(
+      ave_credit = round(mean(credit), 1),
+      ave_income = round(mean(income), 1)
+    )
+})
+
+
+
+```
+
+### Chart C
+
+```{r}
+
+renderTable({
+  customer_data %>% 
+    group_by(region) %>% 
+    summarize(
+      ave_credit = round(mean(credit), 1),
+      ave_income = round(mean(income), 1)
+    )
+})
+
+
+```
+
