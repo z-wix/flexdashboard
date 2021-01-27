@@ -28,11 +28,21 @@ output:
 
 -   **flexdashboard** is an R package that allows you to easily build dashboards using *Rmarkdown*.
 
--   Utilizing *shiny* functions in a dashboard will help create interactive dashboards.
+-   Utilize *shiny* functions in a simple template dashboard to create interactive dashboards.
 
 ## Example Dashboards
 
 (Maybe some images of dashboards so they know what they look like. Or we can use some that I have built before and play around with them just so they get the gist of it like just post a link to one of them)
+
+[Google Trends Dashboard for Marketing Lab](https://byumarketinglab.shinyapps.io/gtrends_dashboard/)
+
+[Book of Mormon Sentiment Analysis](https://zwix14.shinyapps.io/bom_dashboard/)
+
+## Sketch out what you want
+
+With dashboards it is best to figure out what kind of layout you want, the type of visuals or data you want to include. 
+
+Keeping things simple is best when telling a story with any data, especially to people who aren't data savvy.
 
 ## Set up
 
@@ -51,13 +61,35 @@ output:
 
 ## YAML Header
 
--   As an Rmarkdown document, there are addition parameters in the yaml output that make it a flexdashboard that runs shiny:
+-   There are many different types of outputs that Rmarkdown allows you to **knit** to a type of file:
 
-`flexdashboard::flex_dashboard:`\
-`orientation: rows`\
+-   `word_document`
+
+-   `html_document`
+
+-   `github_document`
+
+---
+
+flexdashboard introduces a more complex output that influences the dashboard layout:
+
+`flexdashboard::flex_dashboard:`
+
+`orientation: rows`
+
 `vertical_layout: scroll`
 
+-   Additionally use this in the yaml to utilize *shiny*:
+
 `runtime: shiny`
+
+---
+
+yaml headers can become very complex but there are many useful things to add.
+
+Such as adding a theme to your dashboard with `theme: yeti` in the output parameters.
+
+[list of themes](https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance)
 
 ## Layout
 
@@ -71,7 +103,15 @@ The yaml header influences the layout of the dashboard
 
 ## Making a Column or Row
 
-Columns and Rows are defined by the level 2 markdown header annotation (`-------------`) - Code chunks following the header will show up in that column/row - Data width or height can be modified above header annotation between {} (`{data-width=650px}`)
+Columns and Rows are defined by the level 2 markdown header annotation:
+
+`-----------------------`
+
+- Code chunks following the header will show up in that column/row 
+
+- Data width or height can be modified above header annotation between {}
+
+`{data-width=650px}`
 
 ## Code Chunks
 
@@ -89,11 +129,10 @@ Additional code chunks under the column/row header will be included in that colu
 
 ------------------------------------------------------------------------
 
-Example Images of the different layouts
+## Example Images of the different layouts
 
-------------------------------------------------------------------------
 
-### Column Orientation
+## Column Orientation
 
 <center>
 
@@ -101,9 +140,8 @@ Example Images of the different layouts
 
 </center>
 
-------------------------------------------------------------------------
 
-### Row Orientation
+## Row Orientation
 
 <center>
 
@@ -111,9 +149,8 @@ Example Images of the different layouts
 
 </center>
 
-------------------------------------------------------------------------
 
-### Stack Scrolling
+## Stack Scrolling
 
 <center>
 
@@ -121,74 +158,110 @@ Example Images of the different layouts
 
 </center>
 
+
 ## Packages
 
 We use the *flexdashboard* and *shiny* packages to access the functions that allow you to build interactive plots in a dashboard.
 
 ```{r message=FALSE}
+# Packages
 library(tidyverse)
 library(flexdashboard)
 library(shiny)
 
-mpg
+# Load Data
+customer_data <- read_csv(here::here("data", "customer_data.csv")) %>% 
+   mutate(age = 2021 - birth_year)
+```
 
-customer_data <- read_csv(here::here("data", "customer_data.csv"))
+## Input Sidebar
+
+You can do this first or last but knowing what you want to influence your charts will help with creating an interactive dashboard.
+
+Sidebars are useful for placing input fields that allow you to interact with your data visualization.
+
+It is always on the left hand side of your dashboard and is fixed. (doesn't scroll with the rest of dashboard)
+
+You create an input sidebar similar to making a column/row except add the parameter of `{.sidebar}`
+
+followed by the same markdown header as a column: 
+
+`-----------------------`
+
+## Input Functions
+
+Input functions allow you to make various kinds of inputs that will let you interact with your data.
+
+There are many different input functions included in *shiny* and *flexdashboard* packages.
+
+Components in all input functions:
+
+-   Input id
+
+-   Input label
+
+---
+
+```{r, eval=FALSE}
+
+# Select Region User Input
+selectInput(
+  inputId = "region",
+  label = "Region",
+  choices = unique(customer_data[,8])     # Index Data set for Choices values
+)
+
 ```
 
 ## Adding Charts
 
-Let's add a filter to a simple graph that we made before.
+Let's add a chart with a filter that will be influenced by the input. In order to reference a **reactive** element (the input function). We need to create a **reactive** environment using render functions. 
 
-```{r}
-mpg %>% 
-  filter(manufacturer == "audi") %>% 
-  ggplot(aes(x = hwy, y = cty)) +
-  geom_jitter(size = 3, alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE)
+To call an input you use `input$inputid` in our case `input$region`.
 
-customer_data %>%
-  # left_join(store_transactions, by = "customer_id") %>% 
-  filter(region == "South") %>% 
-  mutate(age = 2021 - birth_year) %>% 
-  select(age, gender:region) %>%
-  ggplot(aes(x = income, fill = gender)) +
-  geom_density(alpha = 0.5)
-```
+```{r, eval=FALSE}
 
-## Adding Value Box
-
-Now let's make a value box to call out a particular value that would be interesting
-
-```{r}
-
-summary <- mpg %>%
-  filter(manufacturer == "audi") %>% 
-  summarize(avg_hwy = mean(hwy))
-
-customer_data %>% 
-  filter()
+renderPlot({                                # Call render function
+  customer_data %>%                         # Make plot
+    filter(region == input$region) %>%      # Reference Input ID
+    select(age, gender:region) %>%
+    ggplot(aes(x = income, fill = gender)) +
+    geom_density(alpha = 0.5)
+})
 
 ```
-
----
-Now we need the shiny function `valueBox()` which will put our value in a nice call out box.
-
-Use the _icon_ argument to add a favicon.
-
-Also we are rounding the number so there aren't a lot of decimal places
----
-
-```{r}
-# valueBox(round(summary,2), icon = "fa-car")
-```
-
-------------------------------------------------------------------------
 
 ## Note on Shiny functions
 
 They will not show up in your plots tab or in the console. You must knit your document and run the dashboard before being able to see these special functions.
 
-------------------------------------------------------------------------
+## Adding Value Box
+
+Now let's make a value boxes to call out a particular value that would be interesting.
+
+The shiny function `valueBox()` within the flexdashboard function `renderValueBox()`, which will put our value in a nice call out box.
+
+Use the `icon =` argument to add a favicon. 
+
+Also we are rounding the number so there aren't a lot of decimal places
+
+```{r, eval=FALSE}
+
+# Make empty reactive expression
+summary <- reactive({ })
+
+
+renderValueBox({                      # Call Render Function
+  summary <- customer_data %>%        # Fill Reactive Expression with Summary
+    filter(region == input$region)
+                                      
+  valueBox(                           # Call Value box Function
+    round(mean(summary$income),0), 
+    icon = "fa-money"
+  )
+})
+
+```
 
 ## Adding a table
 
@@ -211,37 +284,7 @@ Now that we have our basic plot, value box and table we can make it interactive 
 
 ------------------------------------------------------------------------
 
-## Input Sidebar
 
-Sidebars are useful for placing input fields that allow you to interact with your data visualization.
-
-You create an input sidebar similar to making a column but add the parameter of `{.sidebar}`. followed by the same markdown header as a column (`----------------`)
-
-## Input Functions
-
-Input functions allow you to make various kinds of inputs that will let you interact with your data.
-
-Components:
-
--   Input id
-
--   Input label
-
--   Choices list
-
-Examples:
-
--   `selectInput()`
-
-```{r}
-# selectInput(
-#   "manu_id",
-#   "Manufacturer",
-#   choices = c(unique(mpg[,1]))
-# )
-```
-
-------------------------------------------------------------------------
 
 ## Wrapping Up
 
@@ -257,18 +300,12 @@ Examples:
 
 *Supplementary Material*
 
--   Flexdashboard for R webpage:
+-   [Flexdashboard for R](https://rmarkdown.rstudio.com/flexdashboard/index.html)
 
-    -   link : \_<https://rmarkdown.rstudio.com/flexdashboard/index.html_>
+-   [Rmarkdown Basics](https://rmarkdown.rstudio.com/authoring_basics.html)
 
--   RStudio's Rmarkdown and Flexdashboard Cheatsheets
-
-## Exercise 0
+## Exercise 00
 
 Open the exercise via the RStudio Cloud workspace and do the following.
 
 1.  Load the tidyverse.
-2.  Explore `mpg` using the functions we've covered.
-3.  Provide a few interesting descriptions (numeric summaries) and visualizations (graphical summaries).
-4.  Practice good coding conventions: Comment often, write in consecutive lines of code using the `%>%`, and use the demonstrated style (e.g., variable names, spacing within functions).
-5.  Export the R script and upload to Learning Suite.

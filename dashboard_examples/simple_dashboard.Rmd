@@ -78,9 +78,6 @@ Row
 renderPlot({
   customer_data %>% 
     filter(region == input$region) %>% 
-    # filter(state == input$state) %>% 
-    # filter(married == input$marital) %>% 
-    # filter(college_degree == input$college) %>% 
     ggplot(aes(x = age, y = credit, size = income, color = gender, alpha = 0.2)) +
     geom_jitter() +
     xlim(input$age[1], input$age[2]) +
