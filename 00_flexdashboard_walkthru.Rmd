@@ -276,14 +276,10 @@ mpg_summary <- mpg %>%
   arrange(desc(n))
 ```
 
-------------------------------------------------------------------------
+## Knitting
 
-## Making Things Interactive!
 
-Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side bar
-
-------------------------------------------------------------------------
-
+## Sharing your dashboard
 
 
 ## Wrapping Up
