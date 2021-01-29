@@ -9,70 +9,121 @@ output:
 ## Interactive Dashboards (image of dashboard)
 
 <center>
-![](~/Work/Dotson RA/RA_work/images/flexdashboard_hex.png){width=650px, hieght=500px}
+
+![](~/Work/Dotson%20RA/RA_work/images/flexdashboard_hex.png){width="650px," hieght="500px"}
+
 </center>
 
 ## Why Dashboards?
 
-- Dashboards create an easy way to interpret and report data to others.
-  + Key performance indicators
-  + Data visualizations
-  + Exploring Data
-- Interactive Dashboards allow users to manipulate the data that is used in the visualizations
+-   Dashboards create an easy way to interpret and report data to others.
 
+    -   Key performance indicators
+    -   Data visualizations
+    -   Exploring Data
+
+-   Interactive Dashboards allow users to manipulate the data that is used in the visualizations
 
 ## Flexdashboard
 
-- __flexdashboard__ is an R package that allows you to easily build dashboards using _Rmarkdown_.
+-   **flexdashboard** is an R package that allows you to easily build dashboards using *Rmarkdown*.
 
-- Utilizing _shiny_ functions in a dashboard will help create interactive dashboards.
+-   Utilize *shiny* functions in a simple template dashboard to create interactive dashboards.
 
-## Example Dasbhoards
+## Example Dashboards
 
-(Maybe some images of dashboards so they know what they look like. Or we can use some that I have built before and play around with them just so they get the gist of it)
+(Maybe some images of dashboards so they know what they look like. Or we can use some that I have built before and play around with them just so they get the gist of it like just post a link to one of them)
+
+[Google Trends Dashboard for Marketing Lab](https://byumarketinglab.shinyapps.io/gtrends_dashboard/)
+
+[Book of Mormon Sentiment Analysis](https://zwix14.shinyapps.io/bom_dashboard/)
+
+## Sketch out what you want
+
+With dashboards it is best to figure out what kind of layout you want, the type of visuals or data you want to include.
+
+Keeping things simple is best when telling a story with any data, especially to people who aren't data savvy.
+
+## Workflow
+
+1.  Import Data packages
+
+2.  Determine what analysis you want to include (graphs, tables, value boxes etc.)
+
+3.  Define inputs (if you are creating an interactive dashboard)
+
+4.  Create visualizations
+
+5.  Layout
 
 ## Set up
 
-- Open a new document in R
-- Choose drop down and select Rmarkdown
-- Choose from Template
-- Select flexdashboard
+1.  Open a new document in R
+2.  Choose drop down and select Rmarkdown
+3.  Choose "From Template"
+4.  Select "flexdashboard"
 
 ## Elements of flexdashboard
 
-- yaml header
-- Layout (columns or rows)
-- Code chunks
-- Charts
-- Sidebar
+-   yaml header
+-   Layout (columns or rows)
+-   Code chunks
+-   Charts
+-   Sidebar
 
 ## YAML Header
 
-- As an Rmarkdown document, there are addition parameters in the yaml output that make it a flexdashboard:
+-   There are many different types of outputs that Rmarkdown allows you to **knit** to a type of file:
 
-`flexdashboard::flex_dashboard:`  
-` orientation: rows`  
-` vertical_layout: scroll`  
-    
-- Additionally, to use shiny functions you include:
+-   `word_document`
+
+-   `html_document`
+
+-   `github_document`
+
+------------------------------------------------------------------------
+
+flexdashboard introduces a more complex output that influences the dashboard layout. Here is an example of what you might put in the yaml if you wanted to create a dashboard oriented by row and with a *scroll* layout.
+
+`flexdashboard::flex_dashboard:`
+
+`orientation: rows`
+
+`vertical_layout: scroll`
+
+-   Additionally use this in the yaml to utilize *shiny* functions:
 
 `runtime: shiny`
+
+------------------------------------------------------------------------
+
+yaml headers can become very complex but there are many useful things to add.
+
+Such as adding a theme to your dashboard with `theme: yeti` in the output parameters.
+
+[List of themes](https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance)
 
 ## Layout
 
 The yaml header influences the layout of the dashboard
 
-- orientation is the layout of the charts which can be _columns_ or _rows_
+-   orientation is the layout of the charts which can be *columns* or *rows* (the default orientation is columns)
 
-- vertical_layout changes how it fits the web page with _fill_ or _scroll_ as options
+-   vertical_layout changes how it fits the web page with *fill* or *scroll* as options
 
-- Another element of the yaml is _theme_. Changes font, color, etc. 
+-   Another element of the yaml is *theme*. Changes font, color, etc.
 
 ## Making a Column or Row
 
-Columns and Rows are defined by the level 2 markdown header annotation (`-------------`)
-- Code chunks following the header will show up in that column/row
-- Data width or height can be modified above header annotation between {} (`{data-width=650px}`)
+Columns and Rows are defined by the level 2 markdown header annotation:
+
+`-----------------------`
+
+-   Code chunks following the header will show up in that column/row
+
+-   Data width or height can be modified above header annotation between {}
+
+`{data-width=650px}`
 
 ## Code Chunks
 
@@ -82,92 +133,151 @@ Data cleaning, manipulation, etc can be performed in the background just showing
 
 Data Visuals (i.e. graphs and tables) and Rendered elements (i.e. `renderText()` and `renderValue()`) will show on the dashboard.
 
----
+------------------------------------------------------------------------
 
 Chunks will be given titles by using markdown header (`###`)
 
 Additional code chunks under the column/row header will be included in that column/row
 
----
+------------------------------------------------------------------------
 
-Example Images of the different layouts
+## Example Images of the different layouts
 
----
+## Column Orientation
 
 <center>
-![](~/Work/Dotson RA/RA_work/images/column_orientation.png){width=650px, hieght=500px}
+
+![](~/Work/Dotson%20RA/RA_work/images/column_orientation.png){width="650px," hieght="500px"}
+
 </center>
 
----
+## Row Orientation
 
 <center>
-![](~/Work/Dotson RA/RA_work/images/row_orientation.png){width=650px, hieght=500px}
+
+![](~/Work/Dotson%20RA/RA_work/images/row_orientation.png){width="650px," hieght="500px"}
+
 </center>
 
----
+## Stack Scrolling
 
 <center>
-![](~/Work/Dotson RA/RA_work/images/stack_scrolling.png){width=650px, hieght=500px}
+
+![](~/Work/Dotson%20RA/RA_work/images/stack_scrolling.png){width="650px," hieght="500px"}
+
 </center>
 
 ## Packages
 
-We use the _flexdashboard_ and _shiny_ packages to access the functions that allow you to build interactive plots in a dashboard.
+We use the *flexdashboard* and *shiny* packages to access the functions that allow you to build interactive plots in a dashboard.
+
 ```{r message=FALSE}
+# Packages
 library(tidyverse)
 library(flexdashboard)
 library(shiny)
 
-mpg
+# Load Data
+customer_data <- read_csv(here::here("data", "customer_data.csv")) %>% 
+   mutate(age = 2021 - birth_year)
 ```
 
----
+## Input Sidebar
+
+You can do this first or last but knowing what you want to influence your charts will help with creating an interactive dashboard.
+
+Sidebars are useful for placing input fields that allow you to interact with your data visualization.
+
+It is always on the left hand side of your dashboard and is fixed. (doesn't scroll with the rest of dashboard)
+
+You create an input sidebar similar to making a column/row except add the parameter of `{.sidebar}`
+
+followed by the same markdown header as a column:
+
+`-----------------------`
+
+## Input Functions
+
+Input functions allow you to make various kinds of inputs that will let you interact with your data.
+
+There are many different input functions included in *shiny* and *flexdashboard* packages.
+
+Components in all input functions:
+
+-   Input id
+
+-   Input label
+
+------------------------------------------------------------------------
+
+```{r, eval=FALSE}
+
+# Select Region User Input
+selectInput(
+  inputId = "region",
+  label = "Region",
+  choices = unique(customer_data[,8])     # Index Data set for Choices values
+)
+
+```
 
 ## Adding Charts
 
-Let's add a filter to a simple graph that we made before.
+Let's add a chart with a filter that will be influenced by the input. In order to reference a **reactive** element (the input function). We need to create a **reactive** environment using render functions.
 
-```{r}
-mpg %>% 
-  filter(manufacturer == "audi") %>% 
-  ggplot(aes(x = hwy, y = cty)) +
-  geom_jitter(size = 3, alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE)
+To call an input you use `input$inputid` in our case `input$region`.
+
+```{r, eval=FALSE}
+
+renderPlot({                                # Call render function
+  customer_data %>%                         # Make plot
+    filter(region == input$region) %>%      # Reference Input ID
+    select(age, gender:region) %>%
+    ggplot(aes(x = income, fill = gender)) +
+    geom_density(alpha = 0.5)
+})
+
+  # customer_data %>%                         # Make plot
+  #   filter(region == "South") %>%      # Reference Input ID
+  #   select(age, gender:region) %>%
+  #   ggplot(aes(x = income, fill = gender)) +
+  #   geom_density(alpha = 0.5)
+
 ```
-
-
-## Adding Value Box
-
-Now let's make a value box to call out a particular value that would be interesting
-
-```{r}
-
-summary <- mpg %>%
-  filter(manufacturer == "audi") %>% 
-  summarize(avg_hwy = mean(hwy))
-
-```
-
----
-Now we need the shiny function `valueBox()` which will put our value in a nice call out box.
-
-Use the _icon_ argument to add a favicon.
-
-Also we are rounding the number so there aren't a lot of decimal places
-
----
-
-```{r}
-# valueBox(round(summary,2), icon = "fa-car")
-```
-
----
 
 ## Note on Shiny functions
 
 They will not show up in your plots tab or in the console. You must knit your document and run the dashboard before being able to see these special functions.
 
----
+## Adding Value Box
+
+Now let's make a value boxes to call out a particular value that would be interesting.
+
+The shiny function `valueBox()` within the flexdashboard function `renderValueBox()`, which will put our value in a nice call out box.
+
+Use the `icon =` argument to add a favicon.
+
+Also we are rounding the number so there aren't a lot of decimal places
+
+------------------------------------------------------------------------
+
+```{r, eval=FALSE}
+
+# Make empty reactive expression
+summary <- reactive({ })
+
+
+renderValueBox({                      # Call Render Function
+  summary <- customer_data %>%        # Fill Reactive Expression with Summary
+    filter(region == input$region)
+                                      
+  valueBox(                           # Call Value box Function
+    round(mean(summary$income),0), 
+    icon = "fa-money"
+  )
+})
+
+```
 
 ## Adding a table
 
@@ -182,71 +292,30 @@ mpg_summary <- mpg %>%
   arrange(desc(n))
 ```
 
----
+## Knitting
 
-## Making Things Interactive!
-
-Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side bar
-
----
-
-## Input Sidebar
-
-Sidebars are useful for placing input fields that allow you to interact with your data visualization.
-
-You create an input sidebar similar to making a column but add the parameter of `{.sidebar}`.   followed by the same markdown header as a column (`----------------`)
-
-## Input Functions
-
-Input functions allow you to make various kinds of inputs that will let you interact with your data.
-
-Components:
-
-- Input id
-
-- Input label
-
-- Choices list
-
-Examples:
-
-- `selectInput()`
-
-```{r}
-# selectInput(
-#   "manu_id",
-#   "Manufacturer",
-#   choices = c(unique(mpg[,1]))
-# )
-```
-
----
-
+## Sharing your dashboard
 
 ## Wrapping Up
 
 *Summary*
 
-- How to open a flexdashboard template through Rmarkdown.
-- How to modify the layout of the dashboard.
-- Create an interactive plot using a sidebar and `selectInput()`. 
+-   How to open a flexdashboard template through Rmarkdown.
+-   How to modify the layout of the dashboard.
+-   Create an interactive plot using a sidebar and `selectInput()`.
 
 *Next Time*
 
-- 
+-   
 
 *Supplementary Material*
 
-- Flexdashboard for R webpage: 
-  + link : _https://rmarkdown.rstudio.com/flexdashboard/index.html_
-- RStudio’s Rmarkdown and Flexdashboard Cheatsheets
+-   [Flexdashboard for R](https://rmarkdown.rstudio.com/flexdashboard/index.html)
 
-## Exercise 0
+-   [Rmarkdown Basics](https://rmarkdown.rstudio.com/authoring_basics.html)
+
+## Exercise 00
 
 Open the exercise via the RStudio Cloud workspace and do the following.
 
-1. Load the tidyverse.
-2. Explore `mpg` using the functions we've covered.
-3. Provide a few interesting descriptions (numeric summaries) and visualizations (graphical summaries).
-4. Practice good coding conventions: Comment often, write in consecutive lines of code using the `%>%`, and use the demonstrated style (e.g., variable names, spacing within functions).
-5. Export the R script and upload to Learning Suite.
+1.  Load the tidyverse.
