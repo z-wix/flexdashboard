@@ -239,11 +239,11 @@ renderPlot({                                # Call render function
     geom_density(alpha = 0.5)
 })
 
-  customer_data %>%                         # Make plot
-    filter(region == "South") %>%      # Reference Input ID
-    select(age, gender:region) %>%
-    ggplot(aes(x = income, fill = gender)) +
-    geom_density(alpha = 0.5)
+  # customer_data %>%                         # Make plot
+  #   filter(region == "South") %>%      # Reference Input ID
+  #   select(age, gender:region) %>%
+  #   ggplot(aes(x = income, fill = gender)) +
+  #   geom_density(alpha = 0.5)
 
 ```
 
@@ -260,6 +260,8 @@ The shiny function `valueBox()` within the flexdashboard function `renderValueBo
 Use the `icon =` argument to add a favicon. 
 
 Also we are rounding the number so there aren't a lot of decimal places
+
+---
 
 ```{r, eval=FALSE}
 
