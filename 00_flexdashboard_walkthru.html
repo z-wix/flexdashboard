@@ -208,6 +208,15 @@ slide:not(.current) .plotly.html-widget{
 
 <p>Keeping things simple is best when telling a story with any data, especially to people who aren’t data savvy.</p>
 
+</article></slide><slide class=""><hgroup><h2>Workflow</h2></hgroup><article  id="workflow">
+
+<ol>
+<li><p>Import Data packages</p></li>
+<li><p>Figure out what analysis you (visuals etc.)</p></li>
+<li><p>What inputs do you want</p></li>
+<li><p>Layout</p></li>
+</ol>
+
 </article></slide><slide class=""><hgroup><h2>Set up</h2></hgroup><article  id="set-up">
 
 <ol>
@@ -272,12 +281,16 @@ slide:not(.current) .plotly.html-widget{
 
 </article></slide><slide class=""><hgroup><h2>Making a Column or Row</h2></hgroup><article  id="making-a-column-or-row">
 
-<p>Columns and Rows are defined by the level 2 markdown header annotation (<code>-------------</code>)</p>
+<p>Columns and Rows are defined by the level 2 markdown header annotation:</p>
+
+<p><code>-----------------------</code></p>
 
 <ul>
 <li><p>Code chunks following the header will show up in that column/row</p></li>
-<li><p>Data width or height can be modified above header annotation between {} (<code>{data-width=650px}</code>)</p></li>
+<li><p>Data width or height can be modified above header annotation between {}</p></li>
 </ul>
+
+<p><code>{data-width=650px}</code></p>
 
 </article></slide><slide class=""><hgroup><h2>Code Chunks</h2></hgroup><article  id="code-chunks">
 
@@ -344,7 +357,9 @@ customer_data &lt;- read_csv(here::here(&quot;data&quot;, &quot;customer_data.cs
 
 <p>You create an input sidebar similar to making a column/row except add the parameter of <code>{.sidebar}</code></p>
 
-<p>followed by the same markdown header as a column (<code>----------------</code>)</p>
+<p>followed by the same markdown header as a column:</p>
+
+<p><code>-----------------------</code></p>
 
 </article></slide><slide class=""><hgroup><h2>Input Functions</h2></hgroup><article  id="input-functions">
 
@@ -365,7 +380,7 @@ customer_data &lt;- read_csv(here::here(&quot;data&quot;, &quot;customer_data.cs
 selectInput(
   inputId = &quot;region&quot;,
   label = &quot;Region&quot;,
-  choices = unique(customer_data[,8])
+  choices = unique(customer_data[,8])     # Index Data set for Choices values
 )</pre>
 
 </article></slide><slide class=""><hgroup><h2>Adding Charts</h2></hgroup><article  id="adding-charts">
@@ -380,7 +395,13 @@ selectInput(
     select(age, gender:region) %&gt;%
     ggplot(aes(x = income, fill = gender)) +
     geom_density(alpha = 0.5)
-})</pre>
+})
+
+  customer_data %&gt;%                         # Make plot
+    filter(region == &quot;South&quot;) %&gt;%      # Reference Input ID
+    select(age, gender:region) %&gt;%
+    ggplot(aes(x = income, fill = gender)) +
+    geom_density(alpha = 0.5)</pre>
 
 </article></slide><slide class=""><hgroup><h2>Note on Shiny functions</h2></hgroup><article  id="note-on-shiny-functions">
 
@@ -403,15 +424,12 @@ summary &lt;- reactive({ })
 renderValueBox({                      # Call Render Function
   summary &lt;- customer_data %&gt;%        # Fill Reactive Expression with Summary
     filter(region == input$region)
-                                      # Call Value box Function
-  valueBox(round(mean(summary$income),0), icon = &quot;fa-money&quot;)
+                                      
+  valueBox(                           # Call Value box Function
+    round(mean(summary$income),0), 
+    icon = &quot;fa-money&quot;
+  )
 })</pre>
-
-</article></slide><slide class=""><hgroup><h2></h2></hgroup><article >
-
-</article></slide><slide class=""><hgroup><h2></h2></hgroup><article >
-
-<pre class = 'prettyprint lang-r'># valueBox(round(summary,2), icon = &quot;fa-car&quot;)</pre>
 
 </article></slide><slide class=""><hgroup><h2>Adding a table</h2></hgroup><article  id="adding-a-table">
 
@@ -426,13 +444,9 @@ renderValueBox({                      # Call Render Function
 
 <pre >## `summarise()` ungrouping output (override with `.groups` argument)</pre>
 
-</article></slide><slide class=""><hgroup><h2></h2></hgroup><article >
+</article></slide><slide class=""><hgroup><h2>Knitting</h2></hgroup><article  id="knitting">
 
-</article></slide><slide class=""><hgroup><h2>Making Things Interactive!</h2></hgroup><article  id="making-things-interactive">
-
-<p>Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side bar</p>
-
-</article></slide><slide class=""><hgroup><h2></h2></hgroup><article >
+</article></slide><slide class=""><hgroup><h2>Sharing your dashboard</h2></hgroup><article  id="sharing-your-dashboard">
 
 </article></slide><slide class=""><hgroup><h2>Wrapping Up</h2></hgroup><article  id="wrapping-up">
 

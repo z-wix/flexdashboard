@@ -44,6 +44,16 @@ With dashboards it is best to figure out what kind of layout you want, the type 
 
 Keeping things simple is best when telling a story with any data, especially to people who aren't data savvy.
 
+## Workflow
+
+1. Import Data packages
+
+2. Figure out what analysis you (visuals etc.)
+
+3. What inputs do you want
+
+4. Layout
+
 ## Set up
 
 1.  Open a new document in R
@@ -228,6 +238,12 @@ renderPlot({                                # Call render function
     ggplot(aes(x = income, fill = gender)) +
     geom_density(alpha = 0.5)
 })
+
+  customer_data %>%                         # Make plot
+    filter(region == "South") %>%      # Reference Input ID
+    select(age, gender:region) %>%
+    ggplot(aes(x = income, fill = gender)) +
+    geom_density(alpha = 0.5)
 
 ```
 
