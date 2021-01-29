@@ -40,26 +40,28 @@ output:
 
 ## Sketch out what you want
 
-With dashboards it is best to figure out what kind of layout you want, the type of visuals or data you want to include. 
+With dashboards it is best to figure out what kind of layout you want, the type of visuals or data you want to include.
 
 Keeping things simple is best when telling a story with any data, especially to people who aren't data savvy.
 
 ## Workflow
 
-1. Import Data packages
+1.  Import Data packages
 
-2. Figure out what analysis you (visuals etc.)
+2.  Determine what analysis you want to include (graphs, tables, value boxes etc.)
 
-3. What inputs do you want
+3.  Define inputs (if you are creating an interactive dashboard)
 
-4. Layout
+4.  Create visualizations
+
+5.  Layout
 
 ## Set up
 
 1.  Open a new document in R
 2.  Choose drop down and select Rmarkdown
-3.  Choose from Template
-4.  Select flexdashboard
+3.  Choose "From Template"
+4.  Select "flexdashboard"
 
 ## Elements of flexdashboard
 
@@ -79,9 +81,9 @@ Keeping things simple is best when telling a story with any data, especially to 
 
 -   `github_document`
 
----
+------------------------------------------------------------------------
 
-flexdashboard introduces a more complex output that influences the dashboard layout:
+flexdashboard introduces a more complex output that influences the dashboard layout. Here is an example of what you might put in the yaml if you wanted to create a dashboard oriented by row and with a *scroll* layout.
 
 `flexdashboard::flex_dashboard:`
 
@@ -89,23 +91,23 @@ flexdashboard introduces a more complex output that influences the dashboard lay
 
 `vertical_layout: scroll`
 
--   Additionally use this in the yaml to utilize *shiny*:
+-   Additionally use this in the yaml to utilize *shiny* functions:
 
 `runtime: shiny`
 
----
+------------------------------------------------------------------------
 
 yaml headers can become very complex but there are many useful things to add.
 
 Such as adding a theme to your dashboard with `theme: yeti` in the output parameters.
 
-[list of themes](https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance)
+[List of themes](https://rmarkdown.rstudio.com/flexdashboard/using.html#appearance)
 
 ## Layout
 
 The yaml header influences the layout of the dashboard
 
--   orientation is the layout of the charts which can be *columns* or *rows*
+-   orientation is the layout of the charts which can be *columns* or *rows* (the default orientation is columns)
 
 -   vertical_layout changes how it fits the web page with *fill* or *scroll* as options
 
@@ -117,9 +119,9 @@ Columns and Rows are defined by the level 2 markdown header annotation:
 
 `-----------------------`
 
-- Code chunks following the header will show up in that column/row 
+-   Code chunks following the header will show up in that column/row
 
-- Data width or height can be modified above header annotation between {}
+-   Data width or height can be modified above header annotation between {}
 
 `{data-width=650px}`
 
@@ -141,7 +143,6 @@ Additional code chunks under the column/row header will be included in that colu
 
 ## Example Images of the different layouts
 
-
 ## Column Orientation
 
 <center>
@@ -149,7 +150,6 @@ Additional code chunks under the column/row header will be included in that colu
 ![](~/Work/Dotson%20RA/RA_work/images/column_orientation.png){width="650px," hieght="500px"}
 
 </center>
-
 
 ## Row Orientation
 
@@ -159,7 +159,6 @@ Additional code chunks under the column/row header will be included in that colu
 
 </center>
 
-
 ## Stack Scrolling
 
 <center>
@@ -167,7 +166,6 @@ Additional code chunks under the column/row header will be included in that colu
 ![](~/Work/Dotson%20RA/RA_work/images/stack_scrolling.png){width="650px," hieght="500px"}
 
 </center>
-
 
 ## Packages
 
@@ -194,7 +192,7 @@ It is always on the left hand side of your dashboard and is fixed. (doesn't scro
 
 You create an input sidebar similar to making a column/row except add the parameter of `{.sidebar}`
 
-followed by the same markdown header as a column: 
+followed by the same markdown header as a column:
 
 `-----------------------`
 
@@ -210,7 +208,7 @@ Components in all input functions:
 
 -   Input label
 
----
+------------------------------------------------------------------------
 
 ```{r, eval=FALSE}
 
@@ -225,7 +223,7 @@ selectInput(
 
 ## Adding Charts
 
-Let's add a chart with a filter that will be influenced by the input. In order to reference a **reactive** element (the input function). We need to create a **reactive** environment using render functions. 
+Let's add a chart with a filter that will be influenced by the input. In order to reference a **reactive** element (the input function). We need to create a **reactive** environment using render functions.
 
 To call an input you use `input$inputid` in our case `input$region`.
 
@@ -257,11 +255,11 @@ Now let's make a value boxes to call out a particular value that would be intere
 
 The shiny function `valueBox()` within the flexdashboard function `renderValueBox()`, which will put our value in a nice call out box.
 
-Use the `icon =` argument to add a favicon. 
+Use the `icon =` argument to add a favicon.
 
 Also we are rounding the number so there aren't a lot of decimal places
 
----
+------------------------------------------------------------------------
 
 ```{r, eval=FALSE}
 
@@ -296,9 +294,7 @@ mpg_summary <- mpg %>%
 
 ## Knitting
 
-
 ## Sharing your dashboard
-
 
 ## Wrapping Up
 
