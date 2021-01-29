@@ -23,20 +23,30 @@ output:
 
 ## Flexdashboard
 
-- __flexdashboard__ is an R package that allows you to easily build dashboards using _Rmarkdown_.
+- __flexdashboard__ is an R package that allows you to easily build dashboards using _Rmarkdown_. There are a wide variety of components you can include in a dashboard such as:
+  + Interactive visualizations
+  + R graphics and tabular data
+  + Value boxes for highlighting important summary data
 
-- Utilizing _shiny_ functions in a dashboard will help create interactive dashboards.
+
+## Flexdashboards with `shiny` functions
+
+- Utilizing _shiny_ functions in a dashboard will help create interactive dashboards. _shiny_ functions allow you to change underlying parameters and see results immediately in your dashboard.
+
+- For example you could let users change _x_ and _y_ variables on a graph directly from the browser. 
 
 ## Example Dasbhoards
+
+[Flexdashboard using _shiny_ functions](https://jjallaire.shinyapps.io/shiny-kmeans/)
 
 (Maybe some images of dashboards so they know what they look like. Or we can use some that I have built before and play around with them just so they get the gist of it)
 
 ## Set up
 
-- Open a new document in R
-- Choose drop down and select Rmarkdown
-- Choose from Template
-- Select flexdashboard
+1. Open a new document in R
+2. Choose drop down and select Rmarkdown
+3. Choose from Template
+4. Select flexdashboard
 
 ## Elements of flexdashboard
 
@@ -62,15 +72,20 @@ output:
 
 The yaml header influences the layout of the dashboard
 
-- orientation is the layout of the charts which can be _columns_ or _rows_
+- Orientation is the layout of the charts which can be _columns_ or _rows_
+  + Column orientation is the default orientation.
+  + Row orientation can be set by including `orientation: rows` under `output:` in the yaml
 
-- vertical_layout changes how it fits the web page with _fill_ or _scroll_ as options
+- `vertical_layout` changes how it fits the web page with _fill_ or _scroll_ as options (if you have a larger number of plots the `scroll` option is better)
 
 - Another element of the yaml is _theme_. Changes font, color, etc. 
 
 ## Making a Column or Row
 
-Columns and Rows are defined by the level 2 markdown header annotation (`-------------`)
+Columns and Rows are defined by the level 2 markdown header annotation:
+
+`-------------`
+
 - Code chunks following the header will show up in that column/row
 - Data width or height can be modified above header annotation between {} (`{data-width=650px}`)
 
@@ -121,8 +136,6 @@ library(shiny)
 mpg
 ```
 
----
-
 ## Adding Charts
 
 Let's add a filter to a simple graph that we made before.
@@ -145,7 +158,7 @@ Now let's make a value box to call out a particular value that would be interest
 summary <- mpg %>%
   filter(manufacturer == "audi") %>% 
   summarize(avg_hwy = mean(hwy))
-
+# valueBox(round(summary,2), icon = "fa-car")
 ```
 
 ---
@@ -154,20 +167,11 @@ Now we need the shiny function `valueBox()` which will put our value in a nice c
 Use the _icon_ argument to add a favicon.
 
 Also we are rounding the number so there aren't a lot of decimal places
-
----
-
-```{r}
-# valueBox(round(summary,2), icon = "fa-car")
-```
-
 ---
 
 ## Note on Shiny functions
 
 They will not show up in your plots tab or in the console. You must knit your document and run the dashboard before being able to see these special functions.
-
----
 
 ## Adding a table
 
@@ -182,11 +186,9 @@ mpg_summary <- mpg %>%
   arrange(desc(n))
 ```
 
----
-
 ## Making Things Interactive!
 
-Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side bar
+Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side Bar
 
 ---
 
