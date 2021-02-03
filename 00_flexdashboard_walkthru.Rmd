@@ -294,17 +294,25 @@ mpg_summary <- mpg %>%
 
 ## Knitting
 
+Transforms document into various outputs which allow you to share your files: word, github document, html, slides, etc. 
+
+Flexdashboards are different. Technically a webapp knit option may say "*run document*."
+
+Since it doesn't created a knitted file you need to publish it in order to share it.
+
 ## Sharing your dashboard
 
 1. Make shinyapps.io account
 
-- Sign up for a free account
+- [Sign up for a free account](https://www.shinyapps.io/admin/#/signup)
 
 - Choose username
 
 2. Install `rsconnect` package
 
 - Authorize Account
+
+---
 
 3. Publishing
 
@@ -314,7 +322,9 @@ mpg_summary <- mpg %>%
 
 - Publish (takes a few moments)
 
+4. Sharing
 
+- Share url from shinyapps.io
 
 ## Wrapping Up
 
