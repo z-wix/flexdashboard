@@ -296,6 +296,14 @@ mpg_summary <- mpg %>%
 
 ## Sharing your dashboard
 
+1. Make shinyapps.io account
+
+- Sign up for a free account
+
+2. Install `rsconnect` package.
+
+
+
 ## Wrapping Up
 
 *Summary*
