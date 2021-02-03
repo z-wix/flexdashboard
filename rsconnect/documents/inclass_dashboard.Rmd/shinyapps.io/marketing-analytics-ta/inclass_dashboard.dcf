@@ -5,8 +5,8 @@ account: marketing-analytics-ta
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3574663
-bundleId: 4176279
+bundleId: 4176347
 url: https://marketing-analytics-ta.shinyapps.io/inclass_dashboard/
-when: 1612367055.64702
+when: 1612368022.94241
 asMultiple: FALSE
 asStatic: FALSE

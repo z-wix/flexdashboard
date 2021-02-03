@@ -18,7 +18,7 @@ library(rsconnect)
 library(DT)
 
 # Data Import
-customer_data <- read_csv(here::here("data", "customer_data.csv")) %>% 
+customer_data <- read_csv("data/customer_data.csv") %>% 
    mutate(age = 2021 - birth_year)
 ```
 
