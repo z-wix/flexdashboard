@@ -1,0 +1,12 @@
+name: inclass_dashboard
+title: inclass_dashboard
+username:
+account: marketing-analytics-ta
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3574663
+bundleId: 4176373
+url: https://marketing-analytics-ta.shinyapps.io/inclass_dashboard/
+when: 1612368321.47721
+asMultiple: FALSE
+asStatic: FALSE
