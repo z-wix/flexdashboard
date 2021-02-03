@@ -300,7 +300,19 @@ mpg_summary <- mpg %>%
 
 - Sign up for a free account
 
-2. Install `rsconnect` package.
+- Choose username
+
+2. Install `rsconnect` package
+
+- Authorize Account
+
+3. Publishing
+
+- Run Document > Publish
+
+- THis document > Choose shinyapps.io account
+
+- Publish (takes a few moments)
 
 
 
