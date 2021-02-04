@@ -139,7 +139,8 @@ Chunks will be given titles by using markdown header (`###`)
 
 Additional code chunks under the column/row header will be included in that column/row
 
-------------------------------------------------------------------------
+
+You can also include explanatory text to go along with your dashboard like an Rmarkdown document.
 
 ## Example Images of the different layouts
 
@@ -294,7 +295,7 @@ mpg_summary <- mpg %>%
 
 ## Knitting
 
-Transforms document into various outputs which allow you to share your files: word, github document, html, slides, etc. 
+Transforms document into various outputs which allow you to share your files: word, github document, html, slides, etc.
 
 Flexdashboards are different. Technically a webapp knit option may say "*run document*."
 
@@ -302,29 +303,29 @@ Since it doesn't created a knitted file you need to publish it in order to share
 
 ## Sharing your dashboard
 
-1. Make shinyapps.io account
+1.  Make shinyapps.io account
 
-- [Sign up for a free account](https://www.shinyapps.io/admin/#/signup)
+-   [Sign up for a free account](https://www.shinyapps.io/admin/#/signup)
 
-- Choose username
+-   Choose username
 
-2. Install `rsconnect` package
+2.  Install `rsconnect` package
 
-- Authorize Account
+-   Authorize Account
 
----
+------------------------------------------------------------------------
 
-3. Publishing
+3.  Publishing
 
-- Run Document > Publish
+-   Run Document \> Publish
 
-- THis document > Choose shinyapps.io account
+-   This document \> Choose shinyapps.io account
 
-- Publish (takes a few moments)
+-   Publish (takes a few moments)
 
-4. Sharing
+4.  Sharing
 
-- Share url from shinyapps.io
+-   Share url from shinyapps.io
 
 ## Wrapping Up
 
