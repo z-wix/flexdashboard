@@ -28,50 +28,50 @@ gammas <- read_rds(
   t()
 
 # Default configurations
-org_default <- read_csv(
+product_default <- read_csv(
     here::here('data', 'org_data_default.csv')
   )
-per_default <- read_csv(
+segment_default <- read_csv(
     here::here('data', 'per_data_default.csv')
   )
 ```
 
-```{r organization-reactive-table}
+```{r product-reactive-table}
 # Assign level labels
-org_table <- data.frame(
+prod_table <- data.frame(
   levels = c(
-    # Organization
+    # Brands
     "Amnesty International",
     "Greenpeace", 
-    "Oxfam", 
+    "Oxfam",
     "Red Cross",
-    # Issue area
+    # Price
     "Environment", 
     "Human rights",
     "Refugee relief",
-    # Financial transparency
+    # Lids
     "Engages in financial transparency",
-    # Financial accountability
+    # Material
     "Engages in financial accountability",
-    # Funding sources
+    # Size
     "Handful of wealthy private donors", 
     "Government grants",
-    # Relationship with host government
+    # Color
     "Criticized by government",
     "Under government crackdown"
   )
 )
 
-# Organization configuration reactive element
-org_reactive <- reactive({
+# Product configuration reactive element
+prod_reactive <- reactive({
   # Organization 1
-  org_table$org1_value <- 0
-  org_table$org1_value[org_table$levels %in% input$org1_org] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_issue] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_fin_trans] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_fin_account] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_funding] <- 1
-  org_table$org1_value[org_table$levels %in% input$org1_host_gov] <- 1
+  prod_table$prod1_value <- 0
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_prod] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_issue] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_trans] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_account] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_funding] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_host_gov] <- 1
     
   # Organization 2
   org_table$org2_value <- 0
@@ -103,9 +103,9 @@ org_reactive <- reactive({
 })
 ```
 
-```{r persona-reactive-table}
+```{r segment-reactive-table}
 # Assign covariate labels
-per_table <- data.frame(
+seg_table <- data.frame(
   levels = c(
     # Intercept
     "Intercept",
