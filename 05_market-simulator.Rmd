@@ -16,6 +16,14 @@ library(shiny)
 ```
 
 ```{r load-data, message=FALSE}
+
+# If we simplify any of the default data sets make sure it matches the gammas as well.
+
+# number of Gamma rows -> number of Organization rows
+
+# number of Gamma Cols -> number of Persona Rows
+
+
 # Gammas of the "everything" model
 gammas <- read_rds(
     here::here('data', 'public_political_social_charity_demo.rds')
