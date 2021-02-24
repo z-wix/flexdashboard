@@ -36,10 +36,10 @@ gammas <- read_rds(
   t()
 
 # Default configurations
-org_default <- read_csv(
+prod_default <- read_csv(
     here::here('data', 'org_data_default.csv')
   )
-per_default <- read_csv(
+seg_default <- read_csv(
     here::here('data', 'per_data_default.csv')
   )
 ```
@@ -111,9 +111,9 @@ prod_reactive <- reactive({
 })
 ```
 
-```{r persona-reactive-table}
+```{r segment-reactive-table}
 # Assign covariate labels
-per_table <- data.frame(
+seg_table <- data.frame(
   levels = c(
     # Intercept
     "Intercept",
@@ -265,125 +265,125 @@ per_table <- data.frame(
   )
 )
 
-# Persona configuration reactive element
-per_reactive <- reactive({
-  # Persona 1
-  per_table$per1_value <- 0
-  per_table$per1_value[per_table$levels == 'Intercept'] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_national_news] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_international_news] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_news_medium] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_follow_gov] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_travel_developing] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_political_pref] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_institution_trust] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_others_charitable] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_worship_attendance] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_religion_importance] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_religion] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_charity_importance] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_trust_in_charity] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_donation_frequency] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_donation_amount] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_volunteer_12] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_volunteer_frequency] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_personal_activism] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_family_activism] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_religious_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_sport_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_art_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_labor_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_political_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_environmental_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_professional_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_humanitarian_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_consumer_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_other_member] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_gender] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_marital_status] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_education] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_income] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_race] <- 1
-  per_table$per1_value[per_table$levels %in% input$per1_age] <- 1
+# Segment configuration reactive element
+seg_reactive <- reactive({
+  # Segment 1
+  seg_table$seg1_value <- 0
+  seg_table$seg1_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_national_news] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_international_news] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_news_medium] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_follow_gov] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_travel_developing] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_political_pref] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_institution_trust] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_others_charitable] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_worship_attendance] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_religion_importance] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_religion] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_charity_importance] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_trust_in_charity] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_donation_frequency] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_donation_amount] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_volunteer_12] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_volunteer_frequency] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_personal_activism] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_family_activism] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_religious_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_sport_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_art_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_labor_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_political_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_environmental_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_professional_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_humanitarian_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_consumer_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_other_member] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_gender] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_marital_status] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_education] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_income] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_race] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$per1_age] <- 1
     
-  # Persona 2
-  per_table$per2_value <- 0
-  per_table$per2_value[per_table$levels == 'Intercept'] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_national_news] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_international_news] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_news_medium] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_follow_gov] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_travel_developing] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_political_pref] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_institution_trust] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_others_charitable] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_worship_attendance] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_religion_importance] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_religion] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_charity_importance] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_trust_in_charity] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_donation_frequency] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_donation_amount] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_volunteer_12] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_volunteer_frequency] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_personal_activism] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_family_activism] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_religious_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_sport_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_art_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_labor_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_political_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_environmental_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_professional_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_humanitarian_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_consumer_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_other_member] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_gender] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_marital_status] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_education] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_income] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_race] <- 1
-  per_table$per2_value[per_table$levels %in% input$per2_age] <- 1
+  # Segment 2
+  seg_table$seg2_value <- 0
+  seg_table$seg2_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_national_news] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_international_news] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_news_medium] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_follow_gov] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_travel_developing] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_political_pref] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_institution_trust] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_others_charitable] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_worship_attendance] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_religion_importance] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_religion] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_charity_importance] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_trust_in_charity] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_donation_frequency] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_donation_amount] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_volunteer_12] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_volunteer_frequency] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_personal_activism] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_family_activism] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_religious_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_sport_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_art_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_labor_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_political_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_environmental_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_professional_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_humanitarian_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_consumer_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_other_member] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_gender] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_marital_status] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_education] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_income] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_race] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$per2_age] <- 1
     
-  # Persona 3
-  per_table$per3_value <- 0
-  per_table$per3_value[per_table$levels == 'Intercept'] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_national_news] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_international_news] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_news_medium] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_follow_gov] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_travel_developing] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_political_pref] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_institution_trust] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_others_charitable] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_worship_attendance] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_religion_importance] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_religion] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_charity_importance] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_trust_in_charity] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_donation_frequency] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_donation_amount] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_volunteer_12] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_volunteer_frequency] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_personal_activism] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_family_activism] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_religious_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_sport_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_art_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_labor_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_political_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_environmental_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_professional_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_humanitarian_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_consumer_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_other_member] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_gender] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_marital_status] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_education] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_income] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_race] <- 1
-  per_table$per3_value[per_table$levels %in% input$per3_age] <- 1
-  per_table
+  # Segment 3
+  seg_table$seg3_value <- 0
+  seg_table$seg3_value[seg_table$levels == 'Intercept'] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_national_news] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_international_news] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_news_medium] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_follow_gov] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_travel_developing] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_political_pref] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_institution_trust] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_others_charitable] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_worship_attendance] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_religion_importance] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_religion] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_charity_importance] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_trust_in_charity] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_donation_frequency] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_donation_amount] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_volunteer_12] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_volunteer_frequency] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_personal_activism] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_family_activism] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_religious_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_sport_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_art_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_labor_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_political_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_environmental_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_professional_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_humanitarian_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_consumer_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_other_member] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_gender] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_marital_status] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_education] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_income] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_race] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$per3_age] <- 1
+  seg_table
 })
 ```
 
