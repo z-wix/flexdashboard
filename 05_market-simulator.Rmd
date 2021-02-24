@@ -394,50 +394,50 @@ Market share
 # Compute and render the market share plot
 renderPlotly({
   prod_choice = prod_reactive()
-  per_choice = per_reactive()
+  seg_choice = seg_reactive()
     
-  # Persona 1 predicted betas
+  # Segment 1 predicted betas
   per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,2])
   
-  # Persona 1 expected utilities
+  # Segment 1 expected utilities
   per1_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per1_betas))
   per1_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per1_betas))
   per1_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per1_betas))
   per1_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per1_betas))
   
-  # Persona 1 market shares
+  # Segment 1 market shares
   per1_share_denom <- sum(per1_prod1_exp, per1_prod2_exp, per1_prod3_exp, per1_prod4_exp)
   per1_prod1_share <- 100 * (per1_prod1_exp / per1_share_denom)
   per1_prod2_share <- 100 * (per1_prod2_exp / per1_share_denom)
   per1_prod3_share <- 100 * (per1_prod3_exp / per1_share_denom)
   per1_prod4_share <- 100 * (per1_prod4_exp / per1_share_denom)
   
-  # Persona 2 predicted betas
+  # Segment 2 predicted betas
   per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
   
-  # Persona 2 expected utilities
+  # Segment 2 expected utilities
   per2_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per2_betas))
   per2_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per2_betas))
   per2_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per2_betas))
   per2_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per2_betas))
   
-  # Persona 2 market shares
+  # Segment 2 market shares
   per2_share_denom <- sum(per2_prod1_exp, per2_prod2_exp, per2_prod3_exp, per2_prod4_exp)
   per2_prod1_share <- 100 * (per2_prod1_exp / per2_share_denom)
   per2_prod2_share <- 100 * (per2_prod2_exp / per2_share_denom)
   per2_prod3_share <- 100 * (per2_prod3_exp / per2_share_denom)
   per2_prod4_share <- 100 * (per2_prod4_exp / per2_share_denom)
   
-  # Persona 3 predicted betas
+  # Segment 3 predicted betas
   per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
   
-  # Persona 3 expected utilities
+  # Segment 3 expected utilities
   per3_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per3_betas))
   per3_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per3_betas))
   per3_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per3_betas))
   per3_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per3_betas))
   
-  # Persona 3 market shares
+  # Segment 3 market shares
   per3_share_denom <- sum(per3_prod1_exp, per3_prod2_exp, per3_prod3_exp, per3_prod4_exp)
   per3_prod1_share <- 100 * (per3_prod1_exp / per3_share_denom)
   per3_prod2_share <- 100 * (per3_prod2_exp / per3_share_denom)
@@ -447,15 +447,15 @@ renderPlotly({
   # Data for plotly
   plot_data <- data.frame(
     Value = c(
-      # Persona 1
+      # Segment 1
       per1_prod1_share, per1_prod2_share, per1_prod3_share, per1_prod4_share, 
-      # Persona 2
+      # Segment 2
       per2_prod1_share, per2_prod2_share, per2_prod3_share, per2_prod4_share,
-      # Persona 3
+      # Segment 3
       per3_prod1_share, per3_prod2_share, per3_prod3_share, per3_prod4_share
     ),
     Organization = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
-    Persona = c(
+    Segment = c(
       rep(input$per1_name, 4), 
       rep(input$per2_name, 4), 
       rep(input$per3_name, 4)
@@ -464,20 +464,20 @@ renderPlotly({
   
   ggplotly(
     plot_data %>% 
-      # Factor Product and Persona with ordered=TRUE
+      # Factor Product and Segment with ordered=TRUE
       mutate(
         Organization = factor(
           Organization, 
           levels = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name), 
           ordered = TRUE
         ),
-        Persona = factor(
-          Persona, 
+        Segment = factor(
+          Segment, 
           levels = c(input$per1_name, input$per2_name, input$per3_name), 
           ordered = TRUE
         )
       ) %>% 
-      ggplot(aes(y = Value, x = Organization, fill = Persona)) +
+      ggplot(aes(y = Value, x = Organization, fill = Segment)) +
       geom_bar(position = "dodge", stat = "identity") +
       labs(x="", y = "Market Share") + 
       scale_fill_manual(values = c("#FFC30B", "#28a153", "#c23838")) +
@@ -494,48 +494,48 @@ renderTable({
   prod_choice = prod_reactive()
   per_choice = per_reactive()
     
-  # Persona 1 predicted betas
+  # Segment 1 predicted betas
   per1_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,2])
   
-  # Persona 1 expected utilities
+  # Segment 1 expected utilities
   per1_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per1_betas))
   per1_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per1_betas))
   per1_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per1_betas))
   per1_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per1_betas))
   
-  # Persona 1 market shares
+  # Segment 1 market shares
   per1_share_denom <- sum(per1_prod1_exp, per1_prod2_exp, per1_prod3_exp, per1_prod4_exp)
   per1_prod1_share <- 100 * (per1_prod1_exp / per1_share_denom)
   per1_prod2_share <- 100 * (per1_prod2_exp / per1_share_denom)
   per1_prod3_share <- 100 * (per1_prod3_exp / per1_share_denom)
   per1_prod4_share <- 100 * (per1_prod4_exp / per1_share_denom)
   
-  # Persona 2 predicted betas
+  # Segment 2 predicted betas
   per2_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,3])
   
-  # Persona 2 expected utilities
+  # Segment 2 expected utilities
   per2_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per2_betas))
   per2_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per2_betas))
   per2_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per2_betas))
   per2_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per2_betas))
   
-  # Persona 2 market shares
+  # Segment 2 market shares
   per2_share_denom <- sum(per2_prod1_exp, per2_prod2_exp, per2_prod3_exp, per2_prod4_exp)
   per2_prod1_share <- 100 * (per2_prod1_exp / per2_share_denom)
   per2_prod2_share <- 100 * (per2_prod2_exp / per2_share_denom)
   per2_prod3_share <- 100 * (per2_prod3_exp / per2_share_denom)
   per2_prod4_share <- 100 * (per2_prod4_exp / per2_share_denom)
   
-  # Persona 3 predicted betas
+  # Segment 3 predicted betas
   per3_betas <- as.matrix(gammas) %*% as.matrix(per_choice[,4])
   
-  # Persona 3 expected utilities
+  # Segment 3 expected utilities
   per3_prod1_exp <- exp(t(prod_choice[,2]) %*% as.matrix(per3_betas))
   per3_prod2_exp <- exp(t(prod_choice[,3]) %*% as.matrix(per3_betas))
   per3_prod3_exp <- exp(t(prod_choice[,4]) %*% as.matrix(per3_betas))
   per3_prod4_exp <- exp(t(prod_choice[,5]) %*% as.matrix(per3_betas))
   
-  # Persona 3 market shares
+  # Segment 3 market shares
   per3_share_denom <- sum(per3_prod1_exp, per3_prod2_exp, per3_prod3_exp, per3_prod4_exp)
   per3_prod1_share <- 100 * (per3_prod1_exp / per3_share_denom)
   per3_prod2_share <- 100 * (per3_prod2_exp / per3_share_denom)
@@ -545,26 +545,25 @@ renderTable({
   # Table
   data <- data.frame(
     Shares = c(
-      # Persona 1
+      # Segment 1
       per1_prod1_share, per1_prod2_share, per1_prod3_share, per1_prod4_share, 
-      # Persona 2
+      # Segment 2
       per2_prod1_share, per2_prod2_share, per2_prod3_share, per2_prod4_share,
-      # Persona 3
+      # Segment 3
       per3_prod1_share, per3_prod2_share, per3_prod3_share, per3_prod4_share
     ),
     Organization = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
-    Persona = c(
+    Segment = c(
       rep(input$per1_name, 4), 
       rep(input$per2_name, 4), 
       rep(input$per3_name, 4)
     )
   ) %>% 
-    pivot_wider(names_from = Persona, values_from = Shares)
+    pivot_wider(names_from = Segment, values_from = Shares)
   
   data
 })
 ```
-
 
 Configurations
 -------------------------------------------------
@@ -1049,9 +1048,9 @@ renderUI({
 })
 ```
 
-### Persona 1
+### Segment 1??
 
-### Persona 2
+### Segment 2
 
 ```{r per2-inputs}
 # Naming
@@ -1755,7 +1754,7 @@ renderUI({
 })
 ```
 
-### Persona 3
+### Segment 3
 
 ```{r per3-inputs}
 # Naming
