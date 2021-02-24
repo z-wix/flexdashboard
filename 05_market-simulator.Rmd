@@ -1354,472 +1354,163 @@ renderUI({
 1172
  
 })
-1173
- 
-1174
- 
+
 # Trust in political institutions
-1175
- 
 renderUI({
-1176
- 
   per_data = persona_data()
-1177
- 
   selectInput(
-1178
- 
     "per1_institution_trust",
-1179
- 
     label = "Political institution trust from none to complete:",
-1180
- 
     choices = c(
-1181
- 
       "No trust at all in political institutions",
-1182
- 
       "Very little trust in political institutions",
-1183
- 
       "Little trust in political institutions",
-1184
- 
       "Neutral trust in political institutions",
-1185
- 
       "Some trust in political institutions",
-1186
- 
       "A lot of trust in political institutions",
-1187
- 
       "Complete trust in political institutions"
-1188
- 
     ),
-1189
- 
     # selected = "Complete trust in political institutions",
-1190
- 
     selected = ifelse(
-1191
- 
       sum(per_data[21:26,2]) == 0, "No trust at all in political institutions",
-1192
- 
       as.character(per_data[21:26,][which(per_data[21:26,2] == 1), 1])
-1193
- 
     ),
-1194
- 
     width = "450px"
-1195
- 
   )
-1196
- 
 })
-1197
- 
-1198
- 
+
 # People should be more charitable
-1199
- 
 renderUI({
-1200
- 
   per_data = persona_data()
-1201
- 
   selectInput(
-1202
- 
     "per1_others_charitable",
-1203
- 
     label = "People should be more charitable:",
-1204
- 
     choices = c(
-1205
- 
       "Strongly disagree",
-1206
- 
       "Disagree",
-1207
- 
       "Somewhat disagree",
-1208
- 
       "Neutral",
-1209
- 
       "Somewhat agree",
-1210
- 
       "Agree",
-1211
- 
       "Strongly agree"
-1212
- 
     ),
-1213
- 
     # selected = "Strongly agree",
-1214
- 
     selected = ifelse(
-1215
- 
       sum(per_data[27:32,2]) == 0, "Strongly disagree",
-1216
- 
       as.character(per_data[27:32,][which(per_data[27:32,2] == 1), 1])
-1217
- 
     ),
-1218
- 
     width = "450px"
-1219
- 
   )
-1220
- 
 })
-1221
- 
-1222
- 
+
 # Religious attendance
-1223
- 
 renderUI({
-1224
- 
   per_data = persona_data()
-1225
- 
   selectInput(
-1226
- 
     "per1_worship_attendance",
-1227
- 
     label = "Worship service attendance:",
-1228
- 
     choices = c(
-1229
- 
       "Not sure",
-1230
- 
       "Rarely attend",
-1231
- 
       "Attend at least once a month"
-1232
- 
     ),
-1233
- 
     # selected = "Attend at least once a month",
-1234
- 
     selected = ifelse(
-1235
- 
       sum(per_data[33:34,2]) == 0, "Not sure",
-1236
- 
       as.character(per_data[33:34,][which(per_data[33:34,2] == 1), 1])
-1237
- 
     ),
-1238
- 
     width = "450px"
-1239
- 
   )
-1240
- 
 })
-1241
- 
-1242
  
 # Importance of religion
-1243
- 
 renderUI({
-1244
- 
   per_data = persona_data()
-1245
- 
   selectInput(
-1246
- 
     "per1_religion_importance",
-1247
- 
     label = "Importance of religion:",
-1248
- 
     choices = c("Not important", "Important"),
-1249
- 
     # selected = "Important",
-1250
- 
     selected = ifelse(
-1251
- 
       sum(per_data[35,2]) == 0, "Not important",
-1252
- 
       as.character(per_data[35,][which(per_data[35,2] == 1), 1])
-1253
- 
     ),
-1254
- 
     width = "450px"
-1255
- 
   )
-1256
- 
 })
-1257
- 
-1258
- 
+
 # Religion
-1259
- 
 renderUI({
-1260
- 
   per_data = persona_data()
-1261
- 
   selectInput(
-1262
- 
     "per1_religion",
-1263
- 
     label = "Religion:",
-1264
- 
     choices = c(
-1265
- 
       "Catholic",
-1266
- 
       'Protestant',
-1267
- 
       'Christian Orthodox',
-1268
- 
       'Jewish',
-1269
- 
       'Muslim',
-1270
- 
       'Sikh',
-1271
- 
       'Hindu',
-1272
- 
       'Buddhist',
-1273
- 
       'Atheist',
-1274
- 
       'Other religion'
-1275
- 
     ),
-1276
- 
     # selected = 'Protestant',
-1277
- 
      selected = ifelse(
-1278
- 
       sum(per_data[36:44,2]) == 0, "Catholic",
-1279
- 
       as.character(per_data[36:44,][which(per_data[36:44,2] == 1), 1])
-1280
- 
     ),
-1281
- 
     width = "450px"
-1282
- 
   )
-1283
- 
 })
-1284
- 
-1285
- 
+
 # Importance of trusting charities
-1286
- 
 renderUI({
-1287
- 
   per_data = persona_data()
-1288
- 
   selectInput(
-1289
- 
     "per1_charity_importance",
-1290
- 
     label = "Charity Importance:",
-1291
- 
     choices = c(
-1292
- 
       "Not at all important",
-1293
- 
       "Very unimportant",
-1294
- 
       "Somewhat unimportant",
-1295
- 
       "Neutral importance",
-1296
- 
       "Somewhat important",
-1297
- 
       "Very important",
-1298
- 
       "Essential"
-1299
- 
     ),
-1300
- 
     # selected = "Somewhat unimportant",
-1301
- 
     selected = ifelse(
-1302
- 
       sum(per_data[45:50,2]) == 0, "Not at all important",
-1303
- 
       as.character(per_data[45:50,][which(per_data[45:50,2] == 1), 1])
-1304
- 
     ),
-1305
- 
     width = "450px"
-1306
- 
   )
-1307
- 
 })
-1308
- 
-1309
- 
+
 # Trust in charities
-1310
- 
 renderUI({
-1311
- 
   per_data = persona_data()
-1312
- 
   selectInput(
-1313
- 
     "per1_trust_in_charity",
-1314
- 
     label = "Charity Trust:",
-1315
- 
     choices = c(
-1316
- 
       "No trust at all in charities",
-1317
- 
       "Very little trust in charities",
-1318
- 
       "Little trust in charities",
-1319
- 
       "Neutral trust in charities",
-1320
- 
       "Some trust in charities",
-1321
- 
       "A lot of trust in charities",
-1322
- 
       "Complete trust in charities"
-1323
- 
     ),
-1324
- 
     # selected = "Complete trust in charities",
-1325
- 
      selected = ifelse(
-1326
- 
       sum(per_data[51:56,2]) == 0, "No trust at all in charities",
-1327
- 
       as.character(per_data[51:56,][which(per_data[51:56,2] == 1), 1])
-1328
- 
     ),
-1329
- 
     width = "450px"
-1330
- 
   )
 
 })
