@@ -1074,285 +1074,100 @@ renderUI({
     ),
     width = "450px"
   )
-1078
- 
 })
-1079
- 
-1080
- 
+
 # Follow international news
-1081
- 
 renderUI({
-1082
- 
   per_data = persona_data()
-1083
- 
   selectInput(
-1084
- 
     "per1_international_news",
-1085
- 
     label = "Follow international news:",
-1086
- 
     choices = c("Never", "Sometimes", "Always"),
-1087
- 
     # selected = "Always",
-1088
- 
     selected = ifelse(
-1089
- 
       sum(per_data[4:5,2]) == 0, "Never",
-1090
- 
       as.character(per_data[4:5,][which(per_data[4:5,2] == 1), 1])
-1091
- 
     ),
-1092
- 
     width = "450px"
-1093
- 
   )
-1094
- 
 })
-1095
- 
-1096
- 
+
 # Mediums to follow news
-1097
- 
 renderUI({
-1098
- 
   per_data = persona_data()
-1099
- 
   selectInput(
-1100
- 
     "per1_news_medium",
-1101
- 
     label = "Medium to follow news:",
-1102
- 
     choices = c(
-1103
- 
       "TV",
-1104
- 
       "Print",
-1105
- 
       "Online (not social media)",
-1106
- 
       "Social media",
-1107
- 
       "Radio",
-1108
- 
       "Email newsletter",
-1109
- 
       "News app"
-1110
- 
     ),
-1111
- 
     multiple = TRUE,
-1112
- 
     # selected = c("TV", "Print", "Social media"),
-1113
- 
     selected = deframe(per_data[6:12,][which(per_data[6:12,2] == 1), 1]),
-1114
- 
     width = "450px"
-1115
- 
   )
-1116
- 
 })
-1117
- 
-1118
- 
+
 # Follow government and public affairs
-1119
- 
 renderUI({
-1120
- 
   per_data = persona_data()
-1121
- 
   selectInput(
-1122
- 
     "per1_follow_gov",
-1123
- 
     label = "Follow government & public affairs:",
-1124
- 
     choices = c("Not Often", "Often"),
-1125
- 
     # selected = "Often",
-1126
- 
     selected = ifelse(
-1127
- 
       sum(per_data[13,2]) == 0, "Not Often",
-1128
- 
       as.character(per_data[13,][which(per_data[13,2] == 1), 1])
-1129
- 
     ),
-1130
- 
     width = "450px"
-1131
- 
   )
-1132
- 
 })
-1133
- 
-1134
- 
+
 # Traveled to a developing country
-1135
- 
 renderUI({
-1136
- 
   per_data = persona_data()
-1137
- 
   selectInput(
-1138
- 
     "per1_travel_developing",
-1139
- 
     label = "Travel to developing country:",
-1140
- 
     choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
-1141
- 
     # selected = "Traveled to a developing country",
-1142
- 
     selected = ifelse(
-1143
- 
       sum(per_data[14,2]) == 0, "Hasn't traveled to a developing country",
-1144
- 
       as.character(per_data[14,][which(per_data[14,2] == 1), 1])
-1145
- 
     ),
-1146
- 
     width = "450px"
-1147
- 
   )
-1148
- 
 })
-1149
- 
-1150
- 
+
 # Liberal to Conservative
-1151
- 
 renderUI({
-1152
- 
   per_data = persona_data()
-1153
- 
   selectInput(
-1154
- 
     "per1_political_pref",
-1155
- 
     label = "Political views from liberal to conservative:",
-1156
- 
     choices = c(
-1157
- 
       "Extremely liberal",
-1158
- 
       "Somewhat liberal",
-1159
- 
       "Slightly liberal",
-1160
- 
       "Moderate",
-1161
- 
       "Slightly conservative",
-1162
- 
       "Somewhat conservative",
-1163
- 
       "Extremely conservative"
-1164
- 
     ),
-1165
- 
     # selected = "Somewhat liberal",
-1166
- 
     selected = ifelse(
-1167
- 
       sum(per_data[15:20,2]) == 0, "Extremely liberal",
-1168
- 
       as.character(per_data[15:20,][which(per_data[15:20,2] == 1), 1])
-1169
- 
     ),
-1170
- 
     width = "450px"
-1171
- 
   )
-1172
- 
 })
 
 # Trust in political institutions
