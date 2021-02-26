@@ -263,8 +263,10 @@ seg_reactive <- reactive({
 Market share
 ====================================================
 
-Plot
+Plot {data-height=500}
 -------------------------------------------------
+
+### Product Market Share Per Segment
 
 ```{r compute-and-plot}
 # Compute and render the market share plot
@@ -330,7 +332,7 @@ renderPlotly({
       # Segment 3
       seg3_prod1_share, seg3_prod2_share, seg3_prod3_share, seg3_prod4_share
     ),
-    Organization = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
+    Product = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name),
     Segment = c(
       rep(input$seg1_name, 4), 
       rep(input$seg2_name, 4), 
@@ -342,8 +344,8 @@ renderPlotly({
     plot_data %>% 
       # Factor Product and Segment with ordered=TRUE
       mutate(
-        Organization = factor(
-          Organization, 
+        Product = factor(
+          Product, 
           levels = c(input$prod1_name, input$prod2_name, input$prod3_name, input$prod4_name), 
           ordered = TRUE
         ),
@@ -353,7 +355,7 @@ renderPlotly({
           ordered = TRUE
         )
       ) %>% 
-      ggplot(aes(y = Value, x = Organization, fill = Segment)) +
+      ggplot(aes(y = Value, x = Product, fill = Segment)) +
       geom_bar(position = "dodge", stat = "identity") +
       labs(x="", y = "Market Share") + 
       scale_fill_manual(values = c("#FFC30B", "#28a153", "#c23838")) +
@@ -441,12 +443,12 @@ renderPlotly({
 # })
 ```
 
-Configurations 
+Product Configurations {data-height=250}
 -------------------------------------------------
 
 ### Product 1
 
-```{r org1-inputs}
+```{r prod1-inputs}
 # Naming
 textInput(
   "prod1_name",
@@ -686,7 +688,7 @@ renderUI({
 
 ### Product 3
 
-```{r org3-inputs}
+```{r prod3-inputs}
 # Naming
 textInput(
   "prod3_name",
@@ -806,7 +808,7 @@ renderUI({
 
 ### Product 4
 
-```{r org4-inputs}
+```{r prod4-inputs}
 # Naming
 textInput(
   "prod4_name",
@@ -923,6 +925,9 @@ renderUI({
   )
 })
 ```
+
+Segment Configurations {data-height=250}
+-------------------------------------------------
 
 ### Segment 1
 
