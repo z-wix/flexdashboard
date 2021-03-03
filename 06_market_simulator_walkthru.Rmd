@@ -1,0 +1,49 @@
+---
+title: "Market Simulator Walkthrough"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+prod_default <- read_csv(
+    here::here('data', 'org_data_default.csv')
+  )
+
+prod_default %>% 
+  mutate(
+    levels = c(
+      # Brand
+      "Hydroflask",
+      "Conmigo",
+      "Nalgene",
+      "Camelbak",
+      # Lid Type default = Screwcap
+      "Wide Mouth", 
+      "Squeeze",
+      "Straw",
+      # Size default = 24 oz
+      "36 oz",
+      # Material default = plastic
+      "Metal",
+      # Color Default = Clear 
+      "Red", 
+      "Blue",
+      # Price Default = $19.99
+      "$24.99",
+      "$29.99"
+    )
+  ) %>% 
+  rename(
+    prod1_value = org1_value,
+    prod2_value = org2_value,
+    prod3_value = org3_value,
+    prod4_value = org4_value 
+  )
+
+
+```
+
