@@ -601,14 +601,14 @@ renderUI({
 ```{r prod2-inputs}
 # Naming
 textInput(
-  "org2_name",
+  "prod2_name",
   label = "Product Name:",
   value = "Product 2",
   placeholder = "Enter Product Name",
   width = "450px"
 )
 
-# Product
+# Brand
 renderUI({
   prod_data = product_data()
   selectInput(
@@ -621,94 +621,94 @@ renderUI({
   )
 })
 
-# Issue area
+# Lid Type
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod2_issue", 
-    label = "Issue Area:",
-    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-    # selected = "Environment",
+    label = "Product Name:",
+    choices = c("Screwlid", "Wide Mouth", "Squeeze", "Straw"),
+    # selected = "Screwlid",
     selected = ifelse(
-      sum(prod_data[5:7,3]) == 0, "Emergency response",
+      sum(prod_data[5:7,3]) == 0, "Screwlid",
       as.character(prod_data[5:7,][which(prod_data[5:7,3] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Financial transparency
+# Size
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod2_fin_trans",
-    label = "Financial Transparency:",
+    label = "Size:",
     choices = c(
-      "Doesn’t engage in financial transparency", 
-      "Engages in financial transparency"
+      "24 oz",
+      "36 oz"
     ),
-    # selected = "Engages in financial transparency",
+    # selected = "24 oz",
     selected = ifelse(
-      sum(prod_data[8,3]) == 0, "Doesn’t engage in financial transparency",
+      sum(prod_data[8,3]) == 0, "24 oz",
       as.character(prod_data[8,][which(prod_data[8,3] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Financial accountability
+# Material
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod2_fin_account",
     label = "Financial Accountability:",
     choices = c(
-      "Doesn’t engage in financial accountability", 
-      "Engages in financial accountability"
+      "Plastic",
+      "Metal"
     ),
-    # selected = "Engages in financial accountability",
+    # selected = "Plastic",
     selected = ifelse(
-      sum(prod_data[9,3]) == 0, "Doesn’t engage in financial accountability",
+      sum(prod_data[9,3]) == 0, "Plastic",
       as.character(prod_data[9,][which(prod_data[9,3] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Funding sources
+# Color
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod2_funding",
-    label = "Funding Source:",
+    label = "Color:",
     choices = c(
-      "Many small private donations", 
-      "Handful of wealthy private donors", 
-      "Government grants"
+      "Clear",
+      "Red",
+      "Blue"
     ),
-    # selected = "Many small private donations",
+    # selected = "Clear",
     selected = ifelse(
-      sum(prod_data[10:11,3]) == 0, "Many small private donations",
+      sum(prod_data[10:11,3]) == 0, "Clear",
       as.character(prod_data[10:11,][which(prod_data[10:11,3] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Relationship with host government
+# Price
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod2_host_gov",
-    label = "Relationship With Host Government",
+    label = "Price:",
     choices = c(
-      "Friendly relationship with government", 
-      "Criticized by government",  
-      "Under government crackdown"
+      "$19.99",
+      "$24.99",
+      "$29.99"
     ),
-    # selected = "Friendly relationship with government",
+    # selected = "$19.99",
     selected = ifelse(
-      sum(prod_data[12:13,3]) == 0, "Friendly relationship with government",
+      sum(prod_data[12:13,3]) == 0, "$19.99",
       as.character(prod_data[12:13,][which(prod_data[12:13,3] == 1), 1])
     ),
     width = "450px"
@@ -735,100 +735,100 @@ renderUI({
     "prod3_prod",
     label = "Product:",
     choice = c("Hydroflask", "Conmigo", "Nalgene", "Camelbak"),
-    # selected = "Red Cross",
+    # selected = "Hydroflask",
     selected = as.character(prod_data[1:4,][which(prod_data[1:4,4] == 1), 1]),
     width = "450px"
   )
 })
 
-# Issue area
+# Lid Type
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod3_issue", 
-    label = "Issue Area:",
-    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-    # selected = "Human rights",
+    label = "Lid Type:",
+    choices = c("Screwlid", "Wide Mouth", "Squeeze", "Straw"),
+    # selected = "Screwlid",
     selected = ifelse(
-      sum(prod_data[5:7,4]) == 0, "Emergency response",
+      sum(prod_data[5:7,4]) == 0, "Screwlid",
       as.character(prod_data[5:7,][which(prod_data[5:7,4] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Financial transparency
+# Size
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod3_fin_trans",
-    label = "Financial Transparency:",
+    label = "Size:",
     choices = c(
-      "Doesn’t engage in financial transparency", 
-      "Engages in financial transparency"
+      "24 oz",
+      "36 oz"
     ),
-    # selected = "Engages in financial transparency",
+    # selected = "24 oz",
     selected = ifelse(
-      sum(prod_data[8,4]) == 0, "Doesn’t engage in financial transparency",
+      sum(prod_data[8,4]) == 0, "24 oz",
       as.character(prod_data[8,][which(prod_data[8,4] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Financial accountability
+# Material
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod3_fin_account",
-    label = "Financial Accountability:",
+    label = "Material:",
     choices = c(
-      "Doesn’t engage in financial accountability", 
-      "Engages in financial accountability"
+      "Plastic", 
+      "Metal"
     ),
-    # selected = "Engages in financial accountability",
+    # selected = "Plastic",
     selected = ifelse(
-      sum(prod_data[9,4]) == 0, "Doesn’t engage in financial accountability",
+      sum(prod_data[9,4]) == 0, "Plastic",
       as.character(prod_data[9,][which(prod_data[9,4] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Funding sources
+# Color
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod3_funding",
-    label = "Funding Source:",
+    label = "Color:",
     choices = c(
-      "Many small private donations", 
-      "Handful of wealthy private donors", 
-      "Government grants"
+      "Clear", 
+      "Red", 
+      "Blue"
     ),
-    # selected = "Many small private donations",
+    # selected = "Clear",
     selected = ifelse(
-      sum(prod_data[10:11,4]) == 0, "Many small private donations",
+      sum(prod_data[10:11,4]) == 0, "Clear",
       as.character(prod_data[10:11,][which(prod_data[10:11,4] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Relationship with host government
+# Price
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod3_host_gov",
-    label = "Relationship With Host Government",
+    label = "Price",
     choices = c(
-      "Friendly relationship with government", 
-      "Criticized by government",  
-      "Under government crackdown"
+      "$19.99", 
+      "$24.99",  
+      "$29.99"
     ),
-    # selected = "Friendly relationship with government",
+    # selected = "$19.99",
     selected = ifelse(
-      sum(prod_data[12:13,4]) == 0, "Friendly relationship with government",
+      sum(prod_data[12:13,4]) == 0, "$19.99",
       as.character(prod_data[12:13,][which(prod_data[12:13,4] == 1), 1])
     ),
     width = "450px"
@@ -861,94 +861,94 @@ renderUI({
   )
 })
 
-# Issue area
+# Lid Type
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod4_issue", 
-    label = "Issue Area:",
-    choices = c("Emergency response", "Environment", "Human rights", "Refugee relief"),
-    # selected = "Refugee relief",
+    label = "Lid Type:",
+    choices = c("Screwlid", "Wide Mouth", "Squeeze", "Straw"),
+    # selected = "Screwlid",
     selected = ifelse(
-      sum(prod_data[5:7,5]) == 0, "Emergency response",
+      sum(prod_data[5:7,5]) == 0, "Screwlid",
       as.character(prod_data[5:7,][which(prod_data[5:7,5] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Financial transparency
+# Size
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod4_fin_trans",
-    label = "Financial Transparency:",
+    label = "Size",
     choices = c(
-      "Doesn’t engage in financial transparency", 
-      "Engages in financial transparency"
+      "24 oz", 
+      "36 oz"
     ),
-    # selected = "Engages in financial transparency",
+    # selected = "24 oz",
     selected = ifelse(
-      sum(prod_data[8,5]) == 0, "Doesn’t engage in financial transparency",
+      sum(prod_data[8,5]) == 0, "24 oz",
       as.character(prod_data[8,][which(prod_data[8,5] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Financial accountability
+# Material
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod4_fin_account",
-    label = "Financial Accountability:",
+    label = "Material:",
     choices = c(
-      "Doesn’t engage in financial accountability", 
-      "Engages in financial accountability"
+      "Plastic", 
+      "Metal"
     ),
-    # selected = "Engages in financial accountability",
+    # selected = "Plastic",
     selected = ifelse(
-      sum(prod_data[9,5]) == 0, "Doesn’t engage in financial accountability",
+      sum(prod_data[9,5]) == 0, "Plastic",
       as.character(prod_data[9,][which(prod_data[9,5] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Funding sources
+# Color
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod4_funding",
-    label = "Funding Source:",
+    label = "Color:",
     choices = c(
-      "Many small private donations", 
-      "Handful of wealthy private donors", 
-      "Government grants"
+      "Clear", 
+      "Red", 
+      "Blue"
     ),
-    # selected = "Many small private donations",
+    # selected = "Clear",
     selected = ifelse(
-      sum(prod_data[10:11,5]) == 0, "Many small private donations",
+      sum(prod_data[10:11,5]) == 0, "Clear",
       as.character(prod_data[10:11,][which(prod_data[10:11,5] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Relationship with host government
+# Price
 renderUI({
   prod_data = product_data()
   selectInput(
     "prod4_host_gov",
-    label = "Relationship With Host Government",
+    label = "Price",
     choices = c(
-      "Friendly relationship with government", 
-      "Criticized by government",  
-      "Under government crackdown"
+      "$19.99", 
+      "$24.99",  
+      "$29.99"
     ),
-    # selected = "Friendly relationship with government",
+    # selected = "$19.99",
     selected = ifelse(
-      sum(prod_data[12:13,5]) == 0, "Friendly relationship with government",
+      sum(prod_data[12:13,5]) == 0, "$19.99",
       as.character(prod_data[12:13,][which(prod_data[12:13,5] == 1), 1])
     ),
     width = "450px"
