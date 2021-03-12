@@ -1,12 +1,26 @@
 ---
 title: "Market Simulator Walkthrough"
+author: "Zack Wixom & James Stewart"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+We built this market simulator so that we could use Conjoint data from Qualtrics 
 
+
+## Outline
+
+**Introduce Purpose**
+
+- State goal of Market Simulator
+- Mention Flexdashboard as method of creating Market Simulator
+- Talk about Conjoint and Data used.
+- Talk about how this code can be used for anyone to help them make a market simulator themselves.
+
+**Coding**
+
+- Set up for flexdashboard
+- Talk about Reactive elements
+- 
 
 ```{r}
 prod_default <- read_csv(
