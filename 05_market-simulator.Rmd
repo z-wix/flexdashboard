@@ -3080,6 +3080,8 @@ renderUI({
 Import & Export
 ====================================================
 
+### File Import
+
 ```{r import}
 # Organization configuration import
 fileInput(
@@ -3133,6 +3135,11 @@ segment_data <- reactive({
   }
 })
 ```
+
+Row
+------------------------------------------------------
+
+### File Export
 
 ```{r export}
 # Render the organization configuration as a table
