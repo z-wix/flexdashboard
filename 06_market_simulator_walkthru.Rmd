@@ -20,7 +20,10 @@ We built this market simulator so that we could use Conjoint data from Qualtrics
 
 - Set up for flexdashboard
 - Talk about Reactive elements
-- 
+- Go through Reactive Tables
+- Go through Matrix Multiplication
+- Go throught Plot Code
+- Go through Inputs
 
 ```{r}
 prod_default <- read_csv(
