@@ -75,7 +75,32 @@ prod_default <- read_csv(
 seg_default <- read_csv(
     here::here('data', 'per_data_default.csv')
   ) %>% 
-  head(., 12)
+  head(., 12) %>% 
+  mutate(
+    levels = c(
+      # Intercept
+      "Intercept",
+      # Gender
+      "Female",
+      "Other",
+      # Age
+      "35-50",
+      "51+",
+      # Race 
+      'White',
+      'Black or African American',
+      'American Indian or Alaskan Native',
+      'Asian',
+      'Native Hawaiian or Pacific Islander',
+      'Hispanic or Latino',
+      'Other race'
+    )
+  ) %>% 
+  rename(
+    seg1_value = per1_value,
+    seg2_value = per2_value,
+    seg3_value = per3_value
+  )
 ```
 
 ```{r product-reactive-table}
@@ -109,38 +134,38 @@ prod_reactive <- reactive({
   # Product 1
   prod_table$prod1_value <- 0
   prod_table$prod1_value[prod_table$levels %in% input$prod1_prod] <- 1
-  prod_table$prod1_value[prod_table$levels %in% input$prod1_issue] <- 1
-  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_trans] <- 1
-  prod_table$prod1_value[prod_table$levels %in% input$prod1_fin_account] <- 1
-  prod_table$prod1_value[prod_table$levels %in% input$prod1_funding] <- 1
-  prod_table$prod1_value[prod_table$levels %in% input$prod1_host_gov] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_lid] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_size] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_mat] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_color] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_price] <- 1
     
   # Product 2
   prod_table$prod2_value <- 0
   prod_table$prod2_value[prod_table$levels %in% input$prod2_prod] <- 1
-  prod_table$prod2_value[prod_table$levels %in% input$prod2_issue] <- 1
-  prod_table$prod2_value[prod_table$levels %in% input$prod2_fin_trans] <- 1
-  prod_table$prod2_value[prod_table$levels %in% input$prod2_fin_account] <- 1
-  prod_table$prod2_value[prod_table$levels %in% input$prod2_funding] <- 1
-  prod_table$prod2_value[prod_table$levels %in% input$prod2_host_gov] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_lid] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_size] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_mat] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_color] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_price] <- 1
     
   # Product 3
   prod_table$prod3_value <- 0
   prod_table$prod3_value[prod_table$levels %in% input$prod3_prod] <- 1
-  prod_table$prod3_value[prod_table$levels %in% input$prod3_issue] <- 1
-  prod_table$prod3_value[prod_table$levels %in% input$prod3_fin_trans] <- 1
-  prod_table$prod3_value[prod_table$levels %in% input$prod3_fin_account] <- 1
-  prod_table$prod3_value[prod_table$levels %in% input$prod3_funding] <- 1
-  prod_table$prod3_value[prod_table$levels %in% input$prod3_host_gov] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_lid] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_size] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_mat] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_color] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_price] <- 1
     
   # Product 4
   prod_table$prod4_value <- 0
   prod_table$prod4_value[prod_table$levels %in% input$prod4_prod] <- 1
-  prod_table$prod4_value[prod_table$levels %in% input$prod4_issue] <- 1
-  prod_table$prod4_value[prod_table$levels %in% input$prod4_fin_trans] <- 1
-  prod_table$prod4_value[prod_table$levels %in% input$prod4_fin_account] <- 1
-  prod_table$prod4_value[prod_table$levels %in% input$prod4_funding] <- 1
-  prod_table$prod4_value[prod_table$levels %in% input$prod4_host_gov] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_lid] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_size] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_mat] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_color] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_price] <- 1
   prod_table
 })
 ```
@@ -151,20 +176,20 @@ seg_table <- data.frame(
   levels = c(
     # Intercept
     "Intercept",
-    # Follow national news
-    "Once a week",
-    "At least once a day",
-    # Follow international news
-    "Sometimes",
-    "Always",
-    # Mediums to follow news
-    "TV",
-    "Print",
-    "Online (not social media)",
-    "Social media",
-    "Radio",
-    "Email newsletter",
-    "News app"
+    # Gender
+    "Female",
+    "Other",
+    # Age
+    "35-50",
+    "51+",
+    # Race 
+    'White',
+    'Black or African American',
+    'American Indian or Alaskan Native',
+    'Asian',
+    'Native Hawaiian or Pacific Islander',
+    'Hispanic or Latino',
+    'Other race'
   )
 )
 
@@ -173,119 +198,23 @@ seg_reactive <- reactive({
   # Segment 1
   seg_table$seg1_value <- 0
   seg_table$seg1_value[seg_table$levels == 'Intercept'] <- 1
-  seg_table$seg1_value[seg_table$levels %in% input$seg1_national_news] <- 1
-  seg_table$seg1_value[seg_table$levels %in% input$seg1_international_news] <- 1
-  seg_table$seg1_value[seg_table$levels %in% input$seg1_news_medium] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_follow_gov] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_travel_developing] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_political_pref] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_institution_trust] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_others_charitable] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_worship_attendance] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_religion_importance] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_religion] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_charity_importance] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_trust_in_charity] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_donation_frequency] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_donation_amount] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_volunteer_12] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_volunteer_frequency] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_personal_activism] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_family_activism] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_religious_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_sport_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_art_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_labor_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_political_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_environmental_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_professional_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_humanitarian_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_consumer_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_other_member] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_gender] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_marital_status] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_education] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_income] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_race] <- 1
-  # seg_table$seg1_value[seg_table$levels %in% input$seg1_age] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$seg1_gender] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$seg1_age] <- 1
+  seg_table$seg1_value[seg_table$levels %in% input$seg1_race] <- 1
     
   # Segment 2
   seg_table$seg2_value <- 0
   seg_table$seg2_value[seg_table$levels == 'Intercept'] <- 1
-  seg_table$seg2_value[seg_table$levels %in% input$seg2_national_news] <- 1
-  seg_table$seg2_value[seg_table$levels %in% input$seg2_international_news] <- 1
-  seg_table$seg2_value[seg_table$levels %in% input$seg2_news_medium] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_follow_gov] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_travel_developing] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_political_pref] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_institution_trust] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_others_charitable] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_worship_attendance] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_religion_importance] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_religion] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_charity_importance] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_trust_in_charity] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_donation_frequency] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_donation_amount] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_volunteer_12] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_volunteer_frequency] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_personal_activism] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_family_activism] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_religious_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_sport_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_art_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_labor_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_political_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_environmental_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_professional_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_humanitarian_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_consumer_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_other_member] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_gender] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_marital_status] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_education] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_income] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_race] <- 1
-  # seg_table$seg2_value[seg_table$levels %in% input$seg2_age] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$seg2_gender] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$seg2_age] <- 1
+  seg_table$seg2_value[seg_table$levels %in% input$seg2_race] <- 1
     
   # Segment 3
   seg_table$seg3_value <- 0
   seg_table$seg3_value[seg_table$levels == 'Intercept'] <- 1
-  seg_table$seg3_value[seg_table$levels %in% input$seg3_national_news] <- 1
-  seg_table$seg3_value[seg_table$levels %in% input$seg3_international_news] <- 1
-  seg_table$seg3_value[seg_table$levels %in% input$seg3_news_medium] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_follow_gov] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_travel_developing] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_political_pref] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_institution_trust] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_others_charitable] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_worship_attendance] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_religion_importance] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_religion] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_charity_importance] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_trust_in_charity] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_donation_frequency] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_donation_amount] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_volunteer_12] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_volunteer_frequency] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_personal_activism] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_family_activism] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_religious_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_sport_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_art_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_labor_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_political_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_environmental_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_professional_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_humanitarian_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_consumer_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_other_member] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_gender] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_marital_status] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_education] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_income] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_race] <- 1
-  # seg_table$seg3_value[seg_table$levels %in% input$seg3_age] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$seg3_gender] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$seg3_age] <- 1
+  seg_table$seg3_value[seg_table$levels %in% input$seg3_race] <- 1
   seg_table
 })
 ```
@@ -505,7 +434,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod1_issue", 
+    "prod1_lid", 
     label = "Lid Type:",
     choices = c("Screwlid", "Wide Mouth", "Squeeze", "Straw"),
     # selected = "Screwlid",
@@ -521,7 +450,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod1_fin_trans",
+    "prod1_size",
     label = "Size:",
     choices = c(
       "24 oz",
@@ -536,64 +465,64 @@ renderUI({
   )
 })
 
-# # Material
-# renderUI({
-#   prod_data = product_data()
-#   selectInput(
-#     "prod1_fin_account",
-#     label = "Material:",
-#     choices = c(
-#       "Plastic", 
-#       "Metal"
-#     ),
-#     # selected = "Plastic",
-#     selected = ifelse(
-#       sum(prod_data[9,2]) == 0, "Plastic",
-#       as.character(prod_data[9,][which(prod_data[9,2] == 1), 1])
-#     ),
-#     width = "450px"
-#   )
-# })
-# 
-# # Color
-# renderUI({
-#   prod_data = product_data()
-#   selectInput(
-#     "prod1_funding",
-#     label = "Color:",
-#     choices = c(
-#       "Clear", 
-#       "Red", 
-#       "Blue"
-#     ),
-#     # selected = "Clear",
-#     selected = ifelse(
-#       sum(prod_data[10:11,2]) == 0, "Clear",
-#       as.character(prod_data[10:11,][which(prod_data[10:11,2] == 1), 1])
-#     ),
-#     width = "450px"
-#   )
-# })
-# 
-# # Price
-# renderUI({
-#   prod_data = product_data()
-#   selectInput(
-#     "prod1_host_gov",
-#     label = "Price:",
-#     choices = c(
-#       "$19.99", 
-#       "$24.99",  
-#       "$29.99"
-#     ),
-#     # selected = "$19.99",
-#     selected = ifelse(
-#       sum(prod_data[12:13,2]) == 0, "$19.99",
-#       as.character(prod_data[12:13,][which(prod_data[12:13,2] == 1), 1])
-#     ),
-#     width = "450px"
-#   )
-# })
+# Material
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_mat",
+    label = "Material:",
+    choices = c(
+      "Plastic",
+      "Metal"
+    ),
+    # selected = "Plastic",
+    selected = ifelse(
+      sum(prod_data[9,2]) == 0, "Plastic",
+      as.character(prod_data[9,][which(prod_data[9,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Color
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_color",
+    label = "Color:",
+    choices = c(
+      "Clear",
+      "Red",
+      "Blue"
+    ),
+    # selected = "Clear",
+    selected = ifelse(
+      sum(prod_data[10:11,2]) == 0, "Clear",
+      as.character(prod_data[10:11,][which(prod_data[10:11,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
+
+# Price
+renderUI({
+  prod_data = product_data()
+  selectInput(
+    "prod1_price",
+    label = "Price:",
+    choices = c(
+      "$19.99",
+      "$24.99",
+      "$29.99"
+    ),
+    # selected = "$19.99",
+    selected = ifelse(
+      sum(prod_data[12:13,2]) == 0, "$19.99",
+      as.character(prod_data[12:13,][which(prod_data[12:13,2] == 1), 1])
+    ),
+    width = "450px"
+  )
+})
 ```
 
 ### Product 2
@@ -625,7 +554,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod2_issue", 
+    "prod2_lid", 
     label = "Product Name:",
     choices = c("Screwlid", "Wide Mouth", "Squeeze", "Straw"),
     # selected = "Screwlid",
@@ -641,7 +570,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod2_fin_trans",
+    "prod2_size",
     label = "Size:",
     choices = c(
       "24 oz",
@@ -660,8 +589,8 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod2_fin_account",
-    label = "Financial Accountability:",
+    "prod2_mat",
+    label = "Material:",
     choices = c(
       "Plastic",
       "Metal"
@@ -679,7 +608,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod2_funding",
+    "prod2_color",
     label = "Color:",
     choices = c(
       "Clear",
@@ -699,7 +628,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod2_host_gov",
+    "prod2_price",
     label = "Price:",
     choices = c(
       "$19.99",
@@ -745,7 +674,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod3_issue", 
+    "prod3_lid", 
     label = "Lid Type:",
     choices = c("Screwlid", "Wide Mouth", "Squeeze", "Straw"),
     # selected = "Screwlid",
@@ -761,7 +690,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod3_fin_trans",
+    "prod3_size",
     label = "Size:",
     choices = c(
       "24 oz",
@@ -780,7 +709,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod3_fin_account",
+    "prod3_mat",
     label = "Material:",
     choices = c(
       "Plastic", 
@@ -799,7 +728,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod3_funding",
+    "prod3_color",
     label = "Color:",
     choices = c(
       "Clear", 
@@ -819,7 +748,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod3_host_gov",
+    "prod3_price",
     label = "Price",
     choices = c(
       "$19.99", 
@@ -865,7 +794,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod4_issue", 
+    "prod4_lid", 
     label = "Lid Type:",
     choices = c("Screwlid", "Wide Mouth", "Squeeze", "Straw"),
     # selected = "Screwlid",
@@ -881,7 +810,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod4_fin_trans",
+    "prod4_size",
     label = "Size",
     choices = c(
       "24 oz", 
@@ -900,7 +829,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod4_fin_account",
+    "prod4_mat",
     label = "Material:",
     choices = c(
       "Plastic", 
@@ -919,7 +848,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod4_funding",
+    "prod4_color",
     label = "Color:",
     choices = c(
       "Clear", 
@@ -939,7 +868,7 @@ renderUI({
 renderUI({
   prod_data = product_data()
   selectInput(
-    "prod4_host_gov",
+    "prod4_price",
     label = "Price",
     choices = c(
       "$19.99", 
@@ -956,7 +885,7 @@ renderUI({
 })
 ```
 
-Segment Configurations
+Segment 1 Configurations
 -------------------------------------------------
 
 ### Segment 1
@@ -970,671 +899,43 @@ textInput(
   placeholder = "Enter Segment Name",
   width = "450px"
 )
- 
-# Follow national news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_national_news",
-    label = "Follow national news:",
-    choices = c("Rarely", "Once a week", "At least once a day"),
-    # selected = "At least once a day",
-    selected = ifelse(
-      sum(seg_data[2:3,2]) == 0, "Rarely",
-      as.character(seg_data[2:3,][which(seg_data[2:3,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Follow international news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_international_news",
-    label = "Follow international news:",
-    choices = c("Never", "Sometimes", "Always"),
-    # selected = "Always",
-    selected = ifelse(
-      sum(seg_data[4:5,2]) == 0, "Never",
-      as.character(seg_data[4:5,][which(seg_data[4:5,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Mediums to follow news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_news_medium",
-    label = "Medium to follow news:",
-    choices = c(
-      "TV",
-      "Print",
-      "Online (not social media)",
-      "Social media",
-      "Radio",
-      "Email newsletter",
-      "News app"
-    ),
-    multiple = TRUE,
-    # selected = c("TV", "Print", "Social media"),
-    selected = deframe(seg_data[6:12,][which(seg_data[6:12,2] == 1), 1]),
-    width = "450px"
-  )
-})
-
-# Follow government and public affairs
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_follow_gov",
-    label = "Follow government & public affairs:",
-    choices = c("Not Often", "Often"),
-    # selected = "Often",
-    selected = ifelse(
-      sum(seg_data[13,2]) == 0, "Not Often",
-      as.character(seg_data[13,][which(seg_data[13,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Traveled to a developing country
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_travel_developing",
-    label = "Travel to developing country:",
-    choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
-    # selected = "Traveled to a developing country",
-    selected = ifelse(
-      sum(seg_data[14,2]) == 0, "Hasn't traveled to a developing country",
-      as.character(seg_data[14,][which(seg_data[14,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Liberal to Conservative
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_political_pref",
-    label = "Political views from liberal to conservative:",
-    choices = c(
-      "Extremely liberal",
-      "Somewhat liberal",
-      "Slightly liberal",
-      "Moderate",
-      "Slightly conservative",
-      "Somewhat conservative",
-      "Extremely conservative"
-    ),
-    # selected = "Somewhat liberal",
-    selected = ifelse(
-      sum(seg_data[15:20,2]) == 0, "Extremely liberal",
-      as.character(seg_data[15:20,][which(seg_data[15:20,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Trust in political institutions
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_institution_trust",
-    label = "Political institution trust from none to complete:",
-    choices = c(
-      "No trust at all in political institutions",
-      "Very little trust in political institutions",
-      "Little trust in political institutions",
-      "Neutral trust in political institutions",
-      "Some trust in political institutions",
-      "A lot of trust in political institutions",
-      "Complete trust in political institutions"
-    ),
-    # selected = "Complete trust in political institutions",
-    selected = ifelse(
-      sum(seg_data[21:26,2]) == 0, "No trust at all in political institutions",
-      as.character(seg_data[21:26,][which(seg_data[21:26,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# People should be more charitable
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_others_charitable",
-    label = "People should be more charitable:",
-    choices = c(
-      "Strongly disagree",
-      "Disagree",
-      "Somewhat disagree",
-      "Neutral",
-      "Somewhat agree",
-      "Agree",
-      "Strongly agree"
-    ),
-    # selected = "Strongly agree",
-    selected = ifelse(
-      sum(seg_data[27:32,2]) == 0, "Strongly disagree",
-      as.character(seg_data[27:32,][which(seg_data[27:32,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Religious attendance
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_worship_attendance",
-    label = "Worship service attendance:",
-    choices = c(
-      "Not sure",
-      "Rarely attend",
-      "Attend at least once a month"
-    ),
-    # selected = "Attend at least once a month",
-    selected = ifelse(
-      sum(seg_data[33:34,2]) == 0, "Not sure",
-      as.character(seg_data[33:34,][which(seg_data[33:34,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
- 
-# Importance of religion
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_religion_importance",
-    label = "Importance of religion:",
-    choices = c("Not important", "Important"),
-    # selected = "Important",
-    selected = ifelse(
-      sum(seg_data[35,2]) == 0, "Not important",
-      as.character(seg_data[35,][which(seg_data[35,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Religion
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_religion",
-    label = "Religion:",
-    choices = c(
-      "Catholic",
-      'Protestant',
-      'Christian Orthodox',
-      'Jewish',
-      'Muslim',
-      'Sikh',
-      'Hindu',
-      'Buddhist',
-      'Atheist',
-      'Other religion'
-    ),
-    # selected = 'Protestant',
-     selected = ifelse(
-      sum(seg_data[36:44,2]) == 0, "Catholic",
-      as.character(seg_data[36:44,][which(seg_data[36:44,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Importance of trusting charities
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_charity_importance",
-    label = "Charity Importance:",
-    choices = c(
-      "Not at all important",
-      "Very unimportant",
-      "Somewhat unimportant",
-      "Neutral importance",
-      "Somewhat important",
-      "Very important",
-      "Essential"
-    ),
-    # selected = "Somewhat unimportant",
-    selected = ifelse(
-      sum(seg_data[45:50,2]) == 0, "Not at all important",
-      as.character(seg_data[45:50,][which(seg_data[45:50,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Trust in charities
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_trust_in_charity",
-    label = "Charity Trust:",
-    choices = c(
-      "No trust at all in charities",
-      "Very little trust in charities",
-      "Little trust in charities",
-      "Neutral trust in charities",
-      "Some trust in charities",
-      "A lot of trust in charities",
-      "Complete trust in charities"
-    ),
-    # selected = "Complete trust in charities",
-     selected = ifelse(
-      sum(seg_data[51:56,2]) == 0, "No trust at all in charities",
-      as.character(seg_data[51:56,][which(seg_data[51:56,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-
-})
-
-# Donation frequency
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_donation_frequency",
-    label = "Donation Frequency:",
-    choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
-    # selected = "Donate at least once a month",
-    selected = ifelse(
-      sum(seg_data[57,2]) == 0, "Donate more than once a month, less than once a year",
-      as.character(seg_data[57,][which(seg_data[57,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Donated last year
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_donation_amount",
-    label = "Donation Amount Last Year:",
-    choices = c(
-      '$1-$49',
-      '$50-$99',
-      '$100-$499',
-      '$500-$999',
-      '$1,000-$4,999',
-      '$5,000-$9,999',
-      '$10,000+'
-    ),
-    # selected = "$100-$499",
-    selected = ifelse(
-      sum(seg_data[58:63,2]) == 0, "$1-$49",
-      as.character(seg_data[58:63,][which(seg_data[58:63,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Volunteered in past 12 months
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_volunteer_12",
-    label = "Volunteered in last 12 Months:",
-    choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
-    # selected = "Volunteered in past 12 months",
-    selected = ifelse(
-      sum(seg_data[64,2]) == 0, "Haven't volunteered in past 12 months",
-      as.character(seg_data[64,][which(seg_data[64,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Volunteer frequency
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_volunteer_frequency",
-    label = "Volunteer Frequency:",
-    choices = c(
-      "Haven't volunteered in past 12 months",
-      "Rarely volunteer",
-      "Volunteer more than once a month, less than once a year",
-      "Volunteer at least once a month"
-    ),
-    # selected = "Volunteer at least once a month",
-    selected = ifelse(
-      sum(seg_data[65:67,2]) == 0, "Haven't volunteered in past 12 months",
-      as.character(seg_data[65:67,][which(seg_data[65:67,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
- 
-# History of activism
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_personal_activism",
-    label = "Personal Activism:",
-    choices = c('Not personally involved', 'Personally involved'),
-    # selected = "Personally involved",
-    selected = ifelse(
-      sum(seg_data[68,2]) == 0, "Not personally involved",
-      as.character(seg_data[68,][which(seg_data[68,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# History of family activism
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_family_activism",
-    label = "Family Activism:",
-    choices = c('Family not involved', 'Family involved'),
-    # selected = "Family involved",
-    selected = ifelse(
-      sum(seg_data[69,2]) == 0, "Family not involved",
-      as.character(seg_data[69,][which(seg_data[69,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Church or religious organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_religious_member",
-    label = "Church Membership:",
-    choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
-    # selected = "Don't belong to church",
-    selected = ifelse(
-      sum(seg_data[70:71,2]) == 0, "Don't belong to church",
-      as.character(seg_data[70:71,][which(seg_data[70:71,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Sport or recreational organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_sport_member",
-    label = "Sport or Recreational Membership:",
-    choices = c(
-      "Don't belong to sports or rec organization", 
-      'Inactive sports or rec organization member',
-      'Active sports or rec organization member'
-    ),
-    # selected = "Don't belong to sports or rec organization",
-    selected = ifelse(
-      sum(seg_data[72:73,2]) == 0, "Don't belong to sports or rec organization",
-      as.character(seg_data[72:73,][which(seg_data[72:73,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Art, music, or educational organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_art_member",
-    label = "Art, Music, or Educational Membership:",
-    choices = c(
-      "Don't belong to educational organization",
-      'Inactive art, music, or educational organization member',
-      'Active art, music, or educational organization member'
-    ),
-    # selected = "Don't belong to educational organization",
-    selected = ifelse(
-      sum(seg_data[74:75,2]) == 0, "Don't belong to educational organization",
-      as.character(seg_data[74:75,][which(seg_data[74:75,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Labor union
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_labor_member",
-    label = "Labor Union Membership:",
-    choices = c(
-      "Don't belong to union",
-      'Inactive union member', 
-      'Active union member'
-    ),
-    # selected = "Don't belong to union",
-    selected = ifelse(
-      sum(seg_data[76:77,2]) == 0, "Don't belong to union",
-      as.character(seg_data[76:77,][which(seg_data[76:77,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Political party
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_political_member",
-    label = "Political Party Membership:",
-    choices = c(
-      "Don't belong to political party",
-      'Inactive political party member',
-      'Active political party member'
-    ),
-    # selected = "Active political party member",
-    selected = ifelse(
-      sum(seg_data[78:79,2]) == 0, "Don't belong to political party",
-      as.character(seg_data[78:79,][which(seg_data[78:79,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Environmental organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_environmental_member",
-    label = "Environmental Organization Membership:",
-    choices = c(
-      "Don't belong to environmental organization",
-      'Inactive environmental organization member',
-      'Active environmental organization member'
-    ),
-    # selected = "Don't belong to environmental organization",
-    selected = ifelse(
-      sum(seg_data[80:81,2]) == 0, "Don't belong to environmental organization",
-      as.character(seg_data[80:81,][which(seg_data[80:81,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Professional association
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_professional_member",
-    label = "Professional Association Membership:",
-    choices = c(
-      "Don't belong to professional association",
-      'Inactive professional association member',
-      'Active professional association member'
-    ),
-    # selected = "Don't belong to professional association",
-    selected = ifelse(
-      sum(seg_data[82:83,2]) == 0, "Don't belong to professional association",
-      as.character(seg_data[82:83,][which(seg_data[82:83,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Humanitarian or charitable organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_humanitarian_member",
-    label = "Humanitarian or Charitable Organization Membership:",
-    choices = c(
-      "Don't belong to humanitarian or charitable organization",
-      'Inactive humanitarian or charitable organization member',
-      'Active humanitarian or charitable organization member'
-    ),
-    # selected = "Active humanitarian or charitable organization member",
-    selected = ifelse(
-      sum(seg_data[84:85,2]) == 0, "Don't belong to humanitarian or charitable organization",
-      as.character(seg_data[84:85,][which(seg_data[84:85,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Consumer organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_consumer_member",
-    label = "Consumer Organization Membership:",
-    choices = c(
-      "Don't belong to consumer organization",
-      'Inactive consumer organization member',
-      'Active consumer organization member'
-    ),
-    # selected = "Don't belong to consumer organization",
-    selected = ifelse(
-      sum(seg_data[86:87,2]) == 0, "Don't belong to consumer organization",
-      as.character(seg_data[86:87,][which(seg_data[86:87,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Other organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_other_member",
-    label = "Other Organization Membership:",
-    choices = c(
-      "Don't belong to another organization",
-      'Inactive member in another organization',
-      'Active member in another organization'
-    ),
-    # selected = "Don't belong to another organization",
-    selected = ifelse(
-      sum(seg_data[88:89,2]) == 0, "Don't belong to another organization",
-      as.character(seg_data[88:89,][which(seg_data[88:89,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
- 
 # Gender
 renderUI({
   seg_data = segment_data()
   selectInput(
     "seg1_gender",
     label = "Gender:",
-    choices = c(
-      "Male",
-      "Female",
-      "Transgender",
-      "Prefer not to say",
-      "Other gender"
-    ),
+    choices = c("Male", "Female", "Other"),
     # selected = "Male",
     selected = ifelse(
-      sum(seg_data[90:93,2]) == 0, "Male",
-      as.character(seg_data[90:93,][which(seg_data[90:93,2] == 1), 1])
+      sum(seg_data[2:3,2]) == 0, "Male",
+      as.character(seg_data[2:3,][which(seg_data[2:3,2] == 1), 1])
     ),
     width = "450px"
   )
 })
- 
-# Marital status
+
+# Age
 renderUI({
   seg_data = segment_data()
   selectInput(
-    "seg1_marital_status",
-    label = "Marital Status:",
-    choices = c(
-      "Married",
-      "Widowed",
-      "Divorced",
-      "Separated",
-      "Never married"
-    ),
-    # selected = "Married",
+    "seg1_age",
+    label = "Age Bucket:",
+    choices = c("<35", "35-50", "50+"),
+    # selected = "<35",
     selected = ifelse(
-      sum(seg_data[94:97,2]) == 0, "Married",
-      as.character(seg_data[94:97,][which(seg_data[94:97,2] == 1), 1])
+      sum(seg_data[4:5,2]) == 0, "<35",
+      as.character(seg_data[4:5,][which(seg_data[4:5,2] == 1), 1])
     ),
     width = "450px"
   )
 })
- 
-# Education
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_education",
-    label = "Education:",
-    choices = c(
-      "Less than high school",
-      "High school graduate",
-      "Some college",
-      "2 year degree",
-      "4 year degree",
-      "Graduate or professional degree",
-      "Doctorate"
-    ),
-    # selected = "2 year degree",
-    selected = ifelse(
-      sum(seg_data[98:103,2]) == 0, "Less than high school",
-      as.character(seg_data[98:103,][which(seg_data[98:103,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
- 
-# Income
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_income",
-    label = "Income:",
-    choices = c('Less than median of $61,372', 'More than median of $61,372'),
-    # selected = "More than median of $61,372",
-    selected = ifelse(
-      sum(seg_data[104,2]) == 0, "Less than median of $61,372",
-      as.character(seg_data[104,][which(seg_data[104,2] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
- 
+
 # Race
 renderUI({
   seg_data = segment_data()
   selectInput(
-    "seg1_race",
+    "seg1_news_medium",
     label = "Race:",
     choices = c(
       'White',
@@ -1642,32 +943,20 @@ renderUI({
       'American Indian or Alaskan Native',
       'Asian',
       'Native Hawaiian or Pacific Islander',
+      'Hispanic or Latino',
       'Other race'
     ),
     multiple = TRUE,
     # selected = "White",
-    selected = deframe(seg_data[105:110,][which(seg_data[105:110,2] == 1), 1]),
-    width = "450px"
-  )
-})
- 
-# Age
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg1_age",
-    label = "Age:",
-    choices = c('Less than median age of 36', "More than median age of 36"),
-    # selected = "Less than median age of 36",
-    selected = ifelse(
-      sum(seg_data[111,2]) == 0, "Less than median age of 36",
-      as.character(seg_data[111,][which(seg_data[111,2] == 1), 1])
-    ),
+    selected = deframe(seg_data[6:12,][which(seg_data[6:12,2] == 1), 1]),
     width = "450px"
   )
 })
  
 ```
+
+Segment 2 Configurations
+-------------------------------------------------
 
 ### Segment 2
 
@@ -1681,655 +970,33 @@ textInput(
   width = "450px"
 )
 
-# Follow national news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_national_news",
-    label = "Follow national news:",
-    choices = c("Rarely", "Once a week", "At least once a day"),
-    # selected = "At least once a day",
-    selected = ifelse(
-      sum(seg_data[2:3,3]) == 0, "Rarely",
-      as.character(seg_data[2:3,][which(seg_data[2:3,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Follow international news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_international_news",
-    label = "Follow international news:",
-    choices = c("Never", "Sometimes", "Always"),
-    # selected = "Always",
-    selected = ifelse(
-      sum(seg_data[4:5,3]) == 0, "Never",
-      as.character(seg_data[4:5,][which(seg_data[4:5,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Mediums to follow news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_news_medium",
-    label = "Medium to follow news:",
-    choices = c(
-      "TV",
-      "Print",
-      "Online (not social media)",
-      "Social media",
-      "Radio",
-      "Email newsletter",
-      "News app"
-    ),
-    multiple = TRUE,
-    # selected = c("TV", "Print", "Social media"),
-    selected = deframe(seg_data[6:12,][which(seg_data[6:12,3] == 1), 1]),
-    width = "450px"
-  )
-})
-
-# Follow government and public affairs
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_follow_gov",
-    label = "Follow government & public affairs:",
-    choices = c("Not Often", "Often"),
-    # selected = "Often",
-    selected = ifelse(
-      sum(seg_data[13,3]) == 0, "Not Often",
-      as.character(seg_data[13,][which(seg_data[13,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Traveled to a developing country
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_travel_developing",
-    label = "Travel to developing country:",
-    choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
-    # selected = "Traveled to a developing country",
-    selected = ifelse(
-      sum(seg_data[14,3]) == 0, "Hasn't traveled to a developing country",
-      as.character(seg_data[14,][which(seg_data[14,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Liberal to Conservative
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_political_pref",
-    label = "Political views from liberal to conservative:",
-    choices = c(
-      "Extremely liberal",
-      "Somewhat liberal",
-      "Slightly liberal",
-      "Moderate",
-      "Slightly conservative",
-      "Somewhat conservative",
-      "Extremely conservative"
-    ),
-    # selected = "Somewhat liberal",
-    selected = ifelse(
-      sum(seg_data[15:20,3]) == 0, "Extremely liberal",
-      as.character(seg_data[15:20,][which(seg_data[15:20,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Trust in political institutions
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_institution_trust",
-    label = "Political institution trust from none to complete:",
-    choices = c(
-      "No trust at all in political institutions",
-      "Very little trust in political institutions",
-      "Little trust in political institutions",
-      "Neutral trust in political institutions",
-      "Some trust in political institutions",
-      "A lot of trust in political institutions",
-      "Complete trust in political institutions"
-    ),
-    # selected = "Complete trust in political institutions",
-    selected = ifelse(
-      sum(seg_data[21:26,3]) == 0, "No trust at all in political institutions",
-      as.character(seg_data[21:26,][which(seg_data[21:26,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# People should be more charitable
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_others_charitable",
-    label = "People should be more charitable:",
-    choices = c(
-      "Strongly disagree",
-      "Disagree",
-      "Somewhat disagree",
-      "Neutral",
-      "Somewhat agree",
-      "Agree",
-      "Strongly agree"
-    ),
-    # selected = "Strongly agree",
-    selected = ifelse(
-      sum(seg_data[27:32,3]) == 0, "Strongly disagree",
-      as.character(seg_data[27:32,][which(seg_data[27:32,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Religious attendance
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_worship_attendance",
-    label = "Worship service attendance:",
-    choices = c(
-      "Not sure",
-      "Rarely attend",
-      "Attend at least once a month"
-    ),
-    # selected = "Attend at least once a month",
-    selected = ifelse(
-      sum(seg_data[33:34,3]) == 0, "Not sure",
-      as.character(seg_data[33:34,][which(seg_data[33:34,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Importance of religion
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_religion_importance",
-    label = "Importance of religion:",
-    choices = c("Not important", "Important"),
-    # selected = "Important",
-    selected = ifelse(
-      sum(seg_data[35,3]) == 0, "Not important",
-      as.character(seg_data[35,][which(seg_data[35,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Religion
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_religion",
-    label = "Religion:",
-    choices = c(
-      'Catholic',
-      'Protestant',
-      'Christian Orthodox',
-      'Jewish',
-      'Muslim',
-      'Sikh',
-      'Hindu',
-      'Buddhist',
-      'Atheist',
-      'Other religion'
-    ),
-    # selected = 'Protestant',
-    selected = ifelse(
-      sum(seg_data[36:44,3]) == 0, "Catholic",
-      as.character(seg_data[36:44,][which(seg_data[36:44,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Importance of trusting charities
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_charity_importance",
-    label = "Charity Importance:",
-    choices = c(
-      "Not at all important",
-      "Very unimportant",
-      "Somewhat unimportant",
-      "Neutral importance",
-      "Somewhat important",
-      "Very important",
-      "Essential"
-    ),
-    # selected = "Somewhat unimportant",
-    selected = ifelse(
-      sum(seg_data[45:50,3]) == 0, "Not at all important",
-      as.character(seg_data[45:50,][which(seg_data[45:50,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Trust in charities
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_trust_in_charity",
-    label = "Charity Trust:",
-    choices = c(
-      "No trust at all in charities",
-      "Very little trust in charities",
-      "Little trust in charities",
-      "Neutral trust in charities",
-      "Some trust in charities",
-      "A lot of trust in charities",
-      "Complete trust in charities"
-    ),
-    # selected = "Complete trust in charities",
-    selected = ifelse(
-      sum(seg_data[51:56,3]) == 0, "No trust at all in charities",
-      as.character(seg_data[51:56,][which(seg_data[51:56,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Donation frequency
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_donation_frequency",
-    label = "Donation Frequency:",
-    choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
-    # selected = "Donate at least once a month",
-    selected = ifelse(
-      sum(seg_data[57,3]) == 0, "Donate more than once a month, less than once a year",
-      as.character(seg_data[57,][which(seg_data[57,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Donated last year
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_donation_amount",
-    label = "Donation Amount Last Year:",
-    choices = c(
-      '$1-$49',
-      '$50-$99',
-      '$100-$499',
-      '$500-$999',
-      '$1,000-$4,999',
-      '$5,000-$9,999',
-      '$10,000+'
-    ),
-    # selected = "$100-$499",
-    selected = ifelse(
-      sum(seg_data[58:63,3]) == 0, "$1-$49",
-      as.character(seg_data[58:63,][which(seg_data[58:63,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Volunteered in past 12 months
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_volunteer_12",
-    label = "Volunteered in last 12 Months:",
-    choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
-    # selected = "Volunteered in past 12 months",
-    selected = ifelse(
-      sum(seg_data[64,3]) == 0, "Haven't volunteered in past 12 months",
-      as.character(seg_data[64,][which(seg_data[64,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Volunteer frequency
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_volunteer_frequency",
-    label = "Volunteer Frequency:",
-    choices = c(
-      "Haven't volunteered in past 12 months",
-      "Rarely volunteer",
-      "Volunteer more than once a month, less than once a year",
-      "Volunteer at least once a month"
-    ),
-    # selected = "Volunteer at least once a month",
-    selected = ifelse(
-      sum(seg_data[65:67,3]) == 0, "Haven't volunteered in past 12 months",
-      as.character(seg_data[65:67,][which(seg_data[65:67,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# History of activism
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_personal_activism",
-    label = "Personal Activism:",
-    choices = c('Not personally involved', 'Personally involved'),
-    # selected = "Personally involved",
-    selected = ifelse(
-      sum(seg_data[68,3]) == 0, "Not personally involved",
-      as.character(seg_data[68,][which(seg_data[68,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# History of family activism
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_family_activism",
-    label = "Family Activism:",
-    choices = c('Family not involved', 'Family involved'),
-    # selected = "Family involved",
-    selected = ifelse(
-      sum(seg_data[69,3]) == 0, "Family not involved",
-      as.character(seg_data[69,][which(seg_data[69,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Church or religious organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_religious_member",
-    label = "Church Membership:",
-    choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
-    # selected = "Don't belong to church",
-    selected = ifelse(
-      sum(seg_data[70:71,3]) == 0, "Don't belong to church",
-      as.character(seg_data[70:71,][which(seg_data[70:71,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Sport or recreational organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_sport_member",
-    label = "Sport or Recreational Membership:",
-    choices = c(
-      "Don't belong to sports or rec organization", 
-      'Inactive sports or rec organization member',
-      'Active sports or rec organization member'
-    ),
-    # selected = "Don't belong to sports or rec organization",
-    selected = ifelse(
-      sum(seg_data[72:73,3]) == 0, "Don't belong to sports or rec organization",
-      as.character(seg_data[72:73,][which(seg_data[72:73,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Art, music, or educational organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_art_member",
-    label = "Art, Music, or Educational Membership:",
-    choices = c(
-      "Don't belong to educational organization",
-      'Inactive art, music, or educational organization member',
-      'Active art, music, or educational organization member'
-    ),
-    # selected = "Don't belong to educational organization",
-    selected = ifelse(
-      sum(seg_data[74:75,3]) == 0, "Don't belong to educational organization",
-      as.character(seg_data[74:75,][which(seg_data[74:75,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Labor union
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_labor_member",
-    label = "Labor Union Membership:",
-    choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
-    # selected = "Don't belong to union",
-    selected = ifelse(
-      sum(seg_data[76:77,3]) == 0, "Don't belong to union",
-      as.character(seg_data[76:77,][which(seg_data[76:77,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Political party
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_political_member",
-    label = "Political Party Membership:",
-    choices = c(
-      "Don't belong to political party",
-      'Inactive political party member',
-      'Active political party member'
-    ),
-    # selected = "Active political party member",
-    selected = ifelse(
-      sum(seg_data[78:79,3]) == 0, "Don't belong to political party",
-      as.character(seg_data[78:79,][which(seg_data[78:79,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Environmental organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_environmental_member",
-    label = "Environmental Organization Membership:",
-    choices = c(
-      "Don't belong to environmental organization",
-      'Inactive environmental organization member',
-      'Active environmental organization member'
-    ),
-    # selected = "Don't belong to environmental organization",
-    selected = ifelse(
-      sum(seg_data[80:81,3]) == 0, "Don't belong to environmental organization",
-      as.character(seg_data[80:81,][which(seg_data[80:81,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Professional association
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_professional_member",
-    label = "Professional Association Membership:",
-    choices = c(
-      "Don't belong to professional association",
-      'Inactive professional association member',
-      'Active professional association member'
-    ),
-    # selected = "Don't belong to professional association",
-    selected = ifelse(
-      sum(seg_data[82:83,3]) == 0, "Don't belong to professional association",
-      as.character(seg_data[82:83,][which(seg_data[82:83,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Humanitarian or charitable organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_humanitarian_member",
-    label = "Humanitarian or Charitable Organization Membership:",
-    choices = c(
-      "Don't belong to humanitarian or charitable organization",
-      'Inactive humanitarian or charitable organization member',
-      'Active humanitarian or charitable organization member'
-    ),
-    # selected = "Active humanitarian or charitable organization member",
-    selected = ifelse(
-      sum(seg_data[84:85,3]) == 0, "Don't belong to humanitarian or charitable organization",
-      as.character(seg_data[84:85,][which(seg_data[84:85,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Consumer organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_consumer_member",
-    label = "Consumer Organization Membership:",
-    choices = c(
-      "Don't belong to consumer organization",
-      'Inactive consumer organization member',
-      'Active consumer organization member'
-    ),
-    # selected = "Don't belong to consumer organization",
-    selected = ifelse(
-      sum(seg_data[86:87,3]) == 0, "Don't belong to consumer organization",
-      as.character(seg_data[86:87,][which(seg_data[86:87,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Other organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_other_member",
-    label = "Other Organization Membership:",
-    choices = c(
-      "Don't belong to another organization",
-      'Inactive member in another organization',
-      'Active member in another organization'
-    ),
-    # selected = "Don't belong to another organization",
-    selected = ifelse(
-      sum(seg_data[88:89,3]) == 0, "Don't belong to another organization",
-      as.character(seg_data[88:89,][which(seg_data[88:89,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
 # Gender
 renderUI({
   seg_data = segment_data()
   selectInput(
     "seg2_gender",
     label = "Gender:",
-    choices = c(
-      "Male",
-      "Female",
-      "Transgender",
-      "Prefer not to say",
-      "Other gender"
-    ),
+    choices = c("Male", "Female", "Other"),
     # selected = "Male",
     selected = ifelse(
-      sum(seg_data[90:93,3]) == 0, "Male",
-      as.character(seg_data[90:93,][which(seg_data[90:93,3] == 1), 1])
+      sum(seg_data[2:3,3]) == 0, "Male",
+      as.character(seg_data[2:3,][which(seg_data[2:3,3] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Marital status
+# Age
 renderUI({
   seg_data = segment_data()
   selectInput(
-    "seg2_marital_status",
-    label = "Marital Status:",
-    choices = c(
-      "Married",
-      "Widowed",
-      "Divorced",
-      "Separated",
-      "Never married"
-    ),
-    # selected = "Married",
+    "seg2_age",
+    label = "Age Bucket:",
+    choices = c("<35", "35-50", "50+"),
+    # selected = "<35",
     selected = ifelse(
-      sum(seg_data[94:97,3]) == 0, "Married",
-      as.character(seg_data[94:97,][which(seg_data[94:97,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Education
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_education",
-    label = "Education:",
-    choices = c(
-      "Less than high school",
-      "High school graduate",
-      "Some college",
-      "2 year degree",
-      "4 year degree",
-      "Graduate or professional degree",
-      "Doctorate"
-    ),
-    # selected = "Some college",
-    selected = ifelse(
-      sum(seg_data[98:103,3]) == 0, "Less than high school",
-      as.character(seg_data[98:103,][which(seg_data[98:103,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Income
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_income",
-    label = "Income:",
-    choices = c('Less than median of $61,372', 'More than median of $61,372'),
-    # selected = "More than median of $61,372",
-    selected = ifelse(
-      sum(seg_data[104,3]) == 0, "Less than median of $61,372",
-      as.character(seg_data[104,][which(seg_data[104,3] == 1), 1])
+      sum(seg_data[4:5,3]) == 0, "<35",
+      as.character(seg_data[4:5,][which(seg_data[4:5,3] == 1), 1])
     ),
     width = "450px"
   )
@@ -2347,30 +1014,16 @@ renderUI({
       'American Indian or Alaskan Native',
       'Asian',
       'Native Hawaiian or Pacific Islander',
+      'Hispanic or Latino',
       'Other race'
     ),
     multiple = TRUE,
-    # selected = "American Indian or Alaskan Native",
-    selected = deframe(seg_data[105:110,][which(seg_data[105:110,3] == 1), 1]),
+    # selected = c("TV", "Print", "Social media"),
+    selected = deframe(seg_data[6:12,][which(seg_data[6:12,3] == 1), 1]),
     width = "450px"
   )
 })
 
-# Age
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg2_age",
-    label = "Age:",
-    choices = c('Less than median age of 36', "More than median age of 36"),
-    # selected = "Less than median age of 36",
-    selected = ifelse(
-      sum(seg_data[111,3]) == 0, "Less than median age of 36",
-      as.character(seg_data[111,][which(seg_data[111,3] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
 ```
 
 ### Segment 3
@@ -2385,655 +1038,33 @@ textInput(
   width = "450px"
 )
 
-# Follow national news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_national_news",
-    label = "Follow national news:",
-    choices = c("Rarely", "Once a week", "At least once a day"),
-    # selected = "At least once a day",
-    selected = ifelse(
-      sum(seg_data[2:3,4]) == 0, "Rarely",
-      as.character(seg_data[2:3,][which(seg_data[2:3,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Follow international news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_international_news",
-    label = "Follow international news:",
-    choices = c("Never", "Sometimes", "Always"),
-    # selected = "Always",
-    selected = ifelse(
-      sum(seg_data[4:5,4]) == 0, "Never",
-      as.character(seg_data[4:5,][which(seg_data[4:5,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Mediums to follow news
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_news_medium",
-    label = "Medium to follow news:",
-    choices = c(
-      "TV",
-      "Print",
-      "Online (not social media)",
-      "Social media",
-      "Radio",
-      "Email newsletter",
-      "News app"
-    ),
-    multiple = TRUE,
-    # selected = c("TV", "Print", "Social media"),
-    selected = deframe(seg_data[6:12,][which(seg_data[6:12,4] == 1), 1]),
-    width = "450px"
-  )
-})
-
-# Follow government and public affairs
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_follow_gov",
-    label = "Follow government & public affairs:",
-    choices = c("Not Often", "Often"),
-    # selected = "Often",
-    selected = ifelse(
-      sum(seg_data[13,4]) == 0, "Not Often",
-      as.character(seg_data[13,][which(seg_data[13,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Traveled to a developing country
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_travel_developing",
-    label = "Travel to developing country:",
-    choices = c("Hasn't traveled to a developing country", "Traveled to a developing country"),
-    # selected = "Traveled to a developing country",
-    selected = ifelse(
-      sum(seg_data[14,4]) == 0, "Hasn't traveled to a developing country",
-      as.character(seg_data[14,][which(seg_data[14,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Liberal to Conservative
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_political_pref",
-    label = "Political views from liberal to conservative:",
-    choices = c(
-      "Extremely liberal",
-      "Somewhat liberal",
-      "Slightly liberal",
-      "Moderate",
-      "Slightly conservative",
-      "Somewhat conservative",
-      "Extremely conservative"
-    ),
-    # selected = "Somewhat liberal",
-    selected = ifelse(
-      sum(seg_data[15:20,4]) == 0, "Extremely liberal",
-      as.character(seg_data[15:20,][which(seg_data[15:20,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Trust in political institutions
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_institution_trust",
-    label = "Political institution trust from none to complete:",
-    choices = c(
-      "No trust at all in political institutions",
-      "Very little trust in political institutions",
-      "Little trust in political institutions",
-      "Neutral trust in political institutions",
-      "Some trust in political institutions",
-      "A lot of trust in political institutions",
-      "Complete trust in political institutions"
-    ),
-    # selected = "Complete trust in political institutions",
-    selected = ifelse(
-      sum(seg_data[21:26,4]) == 0, "No trust at all in political institutions",
-      as.character(seg_data[21:26,][which(seg_data[21:26,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# People should be more charitable
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_others_charitable",
-    label = "People should be more charitable:",
-    choices = c(
-      "Strongly disagree",
-      "Disagree",
-      "Somewhat disagree",
-      "Neutral",
-      "Somewhat agree",
-      "Agree",
-      "Strongly agree"
-    ),
-    # selected = "Strongly agree",
-    selected = ifelse(
-      sum(seg_data[27:32,4]) == 0, "Strongly disagree",
-      as.character(seg_data[27:32,][which(seg_data[27:32,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Religious attendance
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_worship_attendance",
-    label = "Worship service attendance:",
-    choices = c(
-      "Not sure",
-      "Rarely attend",
-      "Attend at least once a month"
-    ),
-    # selected = "Attend at least once a month",
-    selected = ifelse(
-      sum(seg_data[33:34,4]) == 0, "Not sure",
-      as.character(seg_data[33:34,][which(seg_data[33:34,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Importance of religion
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_religion_importance",
-    label = "Importance of religion:",
-    choices = c("Not important", "Important"),
-    # selected = "Important",
-    selected = ifelse(
-      sum(seg_data[35,4]) == 0, "Not important",
-      as.character(seg_data[35,][which(seg_data[35,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Religion
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_religion",
-    label = "Religion:",
-    choices = c(
-      'Catholic',
-      'Protestant',
-      'Christian Orthodox',
-      'Jewish',
-      'Muslim',
-      'Sikh',
-      'Hindu',
-      'Buddhist',
-      'Atheist',
-      'Other religion'
-    ),
-    # selected = 'Protestant',
-    selected = ifelse(
-      sum(seg_data[36:44,4]) == 0, "Catholic",
-      as.character(seg_data[36:44,][which(seg_data[36:44,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Importance of trusting charities
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_charity_importance",
-    label = "Charity Importance:",
-    choices = c(
-      "Not at all important",
-      "Very unimportant",
-      "Somewhat unimportant",
-      "Neutral importance",
-      "Somewhat important",
-      "Very important",
-      "Essential"
-    ),
-    # selected = "Somewhat unimportant",
-    selected = ifelse(
-      sum(seg_data[45:50,4]) == 0, "Not at all important",
-      as.character(seg_data[45:50,][which(seg_data[45:50,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Trust in charities
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_trust_in_charity",
-    label = "Charity Trust:",
-    choices = c(
-      "No trust at all in charities",
-      "Very little trust in charities",
-      "Little trust in charities",
-      "Neutral trust in charities",
-      "Some trust in charities",
-      "A lot of trust in charities",
-      "Complete trust in charities"
-    ),
-    # selected = "Complete trust in charities",
-    selected = ifelse(
-      sum(seg_data[51:56,4]) == 0, "No trust at all in charities",
-      as.character(seg_data[51:56,][which(seg_data[51:56,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Donation frequency
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_donation_frequency",
-    label = "Donation Frequency:",
-    choices = c('Donate more than once a month, less than once a year', 'Donate at least once a month'),
-    # selected = "Donate at least once a month",
-    selected = ifelse(
-      sum(seg_data[57,4]) == 0, "Donate more than once a month, less than once a year",
-      as.character(seg_data[57,][which(seg_data[57,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Donated last year
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_donation_amount",
-    label = "Donation Amount Last Year:",
-    choices = c(
-      '$1-$49',
-      '$50-$99',
-      '$100-$499',
-      '$500-$999',
-      '$1,000-$4,999',
-      '$5,000-$9,999',
-      '$10,000+'
-    ),
-    # selected = "$100-$499",
-    selected = ifelse(
-      sum(seg_data[58:63,4]) == 0, "$1-$49",
-      as.character(seg_data[58:63,][which(seg_data[58:63,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Volunteered in past 12 months
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_volunteer_12",
-    label = "Volunteered in last 12 Months:",
-    choices = c("Haven't volunteered in past 12 months", "Volunteered in past 12 months"),
-    # selected = "Volunteered in past 12 months",
-    selected = ifelse(
-      sum(seg_data[64,4]) == 0, "Haven't volunteered in past 12 months",
-      as.character(seg_data[64,][which(seg_data[64,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Volunteer frequency
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_volunteer_frequency",
-    label = "Volunteer Frequency:",
-    choices = c(
-      "Haven't volunteered in past 12 months",
-      "Rarely volunteer",
-      "Volunteer more than once a month, less than once a year",
-      "Volunteer at least once a month"
-    ),
-    # selected = "Volunteer at least once a month",
-    selected = ifelse(
-      sum(seg_data[65:67,4]) == 0, "Haven't volunteered in past 12 months",
-      as.character(seg_data[65:67,][which(seg_data[65:67,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# History of activism
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_personal_activism",
-    label = "Personal Activism:",
-    choices = c('Not personally involved', 'Personally involved'),
-    # selected = "Personally involved",
-    selected = ifelse(
-      sum(seg_data[68,4]) == 0, "Not personally involved",
-      as.character(seg_data[68,][which(seg_data[68,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# History of family activism
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_family_activism",
-    label = "Family Activism:",
-    choices = c('Family not involved', 'Family involved'),
-    # selected = "Family involved",
-    selected = ifelse(
-      sum(seg_data[69,4]) == 0, "Family not involved",
-      as.character(seg_data[69,][which(seg_data[69,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Church or religious organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_religious_member",
-    label = "Church Membership:",
-    choices = c("Don't belong to church",'Inactive church member', 'Active church member'),
-    # selected = "Don't belong to church",
-    selected = ifelse(
-      sum(seg_data[70:71,4]) == 0, "Don't belong to church",
-      as.character(seg_data[70:71,][which(seg_data[70:71,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Sport or recreational organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_sport_member",
-    label = "Sport or Recreational Membership:",
-    choices = c(
-      "Don't belong to sports or rec organization", 
-      'Inactive sports or rec organization member',
-      'Active sports or rec organization member'
-    ),
-    # selected = "Don't belong to sports or rec organization",
-    selected = ifelse(
-      sum(seg_data[72:73,4]) == 0, "Don't belong to sports or rec organization",
-      as.character(seg_data[72:73,][which(seg_data[72:73,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Art, music, or educational organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_art_member",
-    label = "Art, Music, or Educational Membership:",
-    choices = c(
-      "Don't belong to educational organization",
-      'Inactive art, music, or educational organization member',
-      'Active art, music, or educational organization member'
-    ),
-    # selected = "Don't belong to educational organization",
-    selected = ifelse(
-      sum(seg_data[74:75,4]) == 0, "Don't belong to educational organization",
-      as.character(seg_data[74:75,][which(seg_data[74:75,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Labor union
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_labor_member",
-    label = "Labor Union Membership:",
-    choices = c("Don't belong to union", 'Inactive union member', 'Active union member'),
-    # selected = "Don't belong to union",
-    selected = ifelse(
-      sum(seg_data[76:77,4]) == 0, "Don't belong to union",
-      as.character(seg_data[76:77,][which(seg_data[76:77,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Political party
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_political_member",
-    label = "Political Party Membership:",
-    choices = c(
-      "Don't belong to political party",
-      'Inactive political party member',
-      'Active political party member'
-    ),
-    # selected = "Active political party member",
-    selected = ifelse(
-      sum(seg_data[78:79,4]) == 0, "Don't belong to political party",
-      as.character(seg_data[78:79,][which(seg_data[78:79,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Environmental organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_environmental_member",
-    label = "Environmental Organization Membership:",
-    choices = c(
-      "Don't belong to environmental organization",
-      'Inactive environmental organization member',
-      'Active environmental organization member'
-    ),
-    # selected = "Don't belong to environmental organization",
-    selected = ifelse(
-      sum(seg_data[80:81,4]) == 0, "Don't belong to environmental organization",
-      as.character(seg_data[80:81,][which(seg_data[80:81,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Professional association
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_professional_member",
-    label = "Professional Association Membership:",
-    choices = c(
-      "Don't belong to professional association",
-      'Inactive professional association member',
-      'Active professional association member'
-    ),
-    # selected = "Don't belong to professional association",
-    selected = ifelse(
-      sum(seg_data[82:83,4]) == 0, "Don't belong to professional association",
-      as.character(seg_data[82:83,][which(seg_data[82:83,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Humanitarian or charitable organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_humanitarian_member",
-    label = "Humanitarian or Charitable Organization Membership:",
-    choices = c(
-      "Don't belong to humanitarian or charitable organization",
-      'Inactive humanitarian or charitable organization member',
-      'Active humanitarian or charitable organization member'
-    ),
-    # selected = "Active humanitarian or charitable organization member",
-    selected = ifelse(
-      sum(seg_data[84:85,4]) == 0, "Don't belong to humanitarian or charitable organization",
-      as.character(seg_data[84:85,][which(seg_data[84:85,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Consumer organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_consumer_member",
-    label = "Consumer Organization Membership:",
-    choices = c(
-      "Don't belong to consumer organization",
-      'Inactive consumer organization member',
-      'Active consumer organization member'
-    ),
-    # selected = "Don't belong to consumer organization",
-    selected = ifelse(
-      sum(seg_data[86:87,4]) == 0, "Don't belong to consumer organization",
-      as.character(seg_data[86:87,][which(seg_data[86:87,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Other organization
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_other_member",
-    label = "Other Organization Membership:",
-    choices = c(
-      "Don't belong to another organization",
-      'Inactive member in another organization',
-      'Active member in another organization'
-    ),
-    # selected = "Don't belong to another organization",
-    selected = ifelse(
-      sum(seg_data[88:89,4]) == 0, "Don't belong to another organization",
-      as.character(seg_data[88:89,][which(seg_data[88:89,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
 # Gender
 renderUI({
   seg_data = segment_data()
   selectInput(
     "seg3_gender",
     label = "Gender:",
-    choices = c(
-      "Male",
-      "Female",
-      "Transgender",
-      "Prefer not to say",
-      "Other gender"
-    ),
-    # selected = "Female",
+    choices = c("Male", "Female", "Other"),
+    # selected = "At least once a day",
     selected = ifelse(
-      sum(seg_data[90:93,4]) == 0, "Male",
-      as.character(seg_data[90:93,][which(seg_data[90:93,4] == 1), 1])
+      sum(seg_data[2:3,4]) == 0, "Male",
+      as.character(seg_data[2:3,][which(seg_data[2:3,4] == 1), 1])
     ),
     width = "450px"
   )
 })
 
-# Marital status
+# Age
 renderUI({
   seg_data = segment_data()
   selectInput(
-    "seg3_marital_status",
-    label = "Marital Status:",
-    choices = c(
-      "Married",
-      "Widowed",
-      "Divorced",
-      "Separated",
-      "Never married"
-    ),
-    # selected = "Married",
+    "seg3_age",
+    label = "Age Bucket:",
+    choices = c("<35", "35-50", "50+"),
+    # selected = "Always",
     selected = ifelse(
-      sum(seg_data[94:97,4]) == 0, "Married",
-      as.character(seg_data[94:97,][which(seg_data[94:97,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Education
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_education",
-    label = "Education:",
-    choices = c(
-      "Less than high school",
-      "High school graduate",
-      "Some college",
-      "2 year degree",
-      "4 year degree",
-      "Graduate or professional degree",
-      "Doctorate"
-    ),
-    # selected = "Graduate or professional degree",
-    selected = ifelse(
-      sum(seg_data[98:103,4]) == 0, "Less than high school",
-      as.character(seg_data[98:103,][which(seg_data[98:103,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
-
-# Income
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_income",
-    label = "Income:",
-    choices = c('Less than median of $61,372', 'More than median of $61,372'),
-    # selected = "More than median of $61,372",
-    selected = ifelse(
-      sum(seg_data[104,4]) == 0, "Less than median of $61,372",
-      as.character(seg_data[104,][which(seg_data[104,4] == 1), 1])
+      sum(seg_data[4:5,4]) == 0, "<35",
+      as.character(seg_data[4:5,][which(seg_data[4:5,4] == 1), 1])
     ),
     width = "450px"
   )
@@ -3051,30 +1082,16 @@ renderUI({
       'American Indian or Alaskan Native',
       'Asian',
       'Native Hawaiian or Pacific Islander',
+      'Hispanic or Latino',
       'Other race'
     ),
     multiple = TRUE,
-    # selected = c("Black or African American", "American Indian or Alaskan Native"),
-    selected = deframe(seg_data[105:110,][which(seg_data[105:110,4] == 1), 1]),
+    # selected = c("TV", "Print", "Social media"),
+    selected = deframe(seg_data[6:12,][which(seg_data[6:12,4] == 1), 1]),
     width = "450px"
   )
 })
 
-# Age
-renderUI({
-  seg_data = segment_data()
-  selectInput(
-    "seg3_age",
-    label = "Age:",
-    choices = c('Less than median age of 36', "More than median age of 36"),
-    # selected = "Less than median age of 36",
-    selected = ifelse(
-      sum(seg_data[111,4]) == 0, "Less than median age of 36",
-      as.character(seg_data[111,][which(seg_data[111,4] == 1), 1])
-    ),
-    width = "450px"
-  )
-})
 ```
 
 Import & Export
