@@ -18,49 +18,95 @@ We built this market simulator so that we could use Conjoint data from Qualtrics
 
 **Coding**
 
-- Set up for flexdashboard
-- Talk about Reactive elements
-- Go through Reactive Tables
-- Go through Matrix Multiplication
-- Go throught Plot Code
-- Go through Inputs
+- Set up for flexdashboard 
+  + Talk about all the different elements (reactive tables - product and segment, inputs - product and segment, plot)
+  
+- Talk about Reactive elements --> Zack 
+- Go through Reactive Tables - skip to inputs for help
 
-```{r}
-prod_default <- read_csv(
-    here::here('data', 'org_data_default.csv')
+```{r product-reactive-table, eval = FALSE}
+# Assign level labels
+prod_table <- data.frame(
+  levels = c(
+    # Brand
+    "Hydroflask",
+    "Conmigo",
+    "Nalgene",
+    "Camelbak",
+    # Lid Type default = Screwcap
+    "Wide Mouth", 
+    "Squeeze",
+    "Straw",
+    # Size default = 24 oz
+    "36 oz",
+    # Material default = plastic
+    "Metal",
+    # Color Default = Clear 
+    "Red", 
+    "Blue",
+    # Price Default = $19.99
+    "$24.99",
+    "$29.99"
   )
+)
 
-prod_default %>% 
-  mutate(
-    levels = c(
-      # Brand
-      "Hydroflask",
-      "Conmigo",
-      "Nalgene",
-      "Camelbak",
-      # Lid Type default = Screwcap
-      "Wide Mouth", 
-      "Squeeze",
-      "Straw",
-      # Size default = 24 oz
-      "36 oz",
-      # Material default = plastic
-      "Metal",
-      # Color Default = Clear 
-      "Red", 
-      "Blue",
-      # Price Default = $19.99
-      "$24.99",
-      "$29.99"
-    )
-  ) %>% 
-  rename(
-    prod1_value = org1_value,
-    prod2_value = org2_value,
-    prod3_value = org3_value,
-    prod4_value = org4_value 
-  )
-
-
+# Product configuration reactive element
+prod_reactive <- reactive({
+  # Product 1
+  prod_table$prod1_value <- 0
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_prod] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_lid] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_size] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_mat] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_color] <- 1
+  prod_table$prod1_value[prod_table$levels %in% input$prod1_price] <- 1
+    
+  # Product 2
+  prod_table$prod2_value <- 0
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_prod] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_lid] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_size] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_mat] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_color] <- 1
+  prod_table$prod2_value[prod_table$levels %in% input$prod2_price] <- 1
+    
+  # Product 3
+  prod_table$prod3_value <- 0
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_prod] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_lid] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_size] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_mat] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_color] <- 1
+  prod_table$prod3_value[prod_table$levels %in% input$prod3_price] <- 1
+    
+  # Product 4
+  prod_table$prod4_value <- 0
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_prod] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_lid] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_size] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_mat] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_color] <- 1
+  prod_table$prod4_value[prod_table$levels %in% input$prod4_price] <- 1
+  prod_table
+})
 ```
+
+- Quick go through of Segment Table
+
+- Go through Matrix Multiplication - explain why we transpose/transform data --> JAMES
+  + compute betas per persona, ex. `seg1_beta`
+  + compute expected utilities, ex. `seg1_prod1_exp`
+  + compute market share, ex. `seg1_prod1_share`
+  + repeat for all segments.
+  + Combine all objects into a dataset for visual, ex. `plot_data` (ask marc about naming inputs)
+- Go through Plot Code
+  + factor variables
+  + use ggplotly for reactive plot
+
+- Go through Inputs --> Zack?
+  + *do we want to talk about the import export data?*
+  + Refer back to Reactive Tables and how the inputs are influencing it
+  + explain what the default selected choice code is doing
+
+
 
