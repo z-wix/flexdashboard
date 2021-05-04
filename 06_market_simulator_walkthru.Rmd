@@ -102,6 +102,8 @@ prod_reactive <- reactive({
 - Go through Plot Code
   + factor variables
   + use ggplotly for reactive plot
+  
+In order to calculate the expected utilities 
 
 - Go through Inputs --> Zack?
   + *do we want to talk about the import export data?*
