@@ -6,7 +6,6 @@ output: github_document
 
 We built this market simulator so that we could use Conjoint data from Qualtrics 
 
-
 ## Outline
 
 **Introduce Purpose**
